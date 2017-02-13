@@ -34,6 +34,9 @@ print(someVariable)
 // Prints 42
 ```
 
+> We'll discuss functions (and methods) with their syntax at length later in this tutorial.
+> For the time being, just use them as presented in the example.
+
 Values can be included in strings by wrapping them in parentheses, and adding a backslash (`\`) before the first one:
 
 ```swift
