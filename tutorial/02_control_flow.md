@@ -177,3 +177,43 @@ for i in 0 ... 10 {
 print(n)
 // Prints "5"
 ```
+
+The `continue` and `break` statements respectively skip and end the loop within which they are defined.
+When nesting loops, it is sometimes desirable to perform those operation on an outer loop.
+In order to do that, it is possible to label the loops, so that `continue` and `break` can specify on which loop they should be applied:
+
+```swift
+outer: for x in 0 ... 3 {
+    print("outer")
+    inner: for y in 0 ... 3 {
+        print("inner")
+        if y < 2 {
+            continue inner
+        }
+
+        if y > x {
+            break outer
+        }
+    }
+}
+// Prints "outer"
+// Prints "inner"
+// Prints "inner"
+// Prints "inner"
+```
+
+In the above example, the `continue` statement skips the remainder of the inner loop when `y` is smaller than 2.
+As soon as `y` gets to 2, the second `if` statement is checked.
+Since at `x` is equal to 0 at that particular moment, the `break` statement ends the outer loop and transfer the control to the remainder of the program.
+
+## Exercise
+
+Write a program that for all natural numbers between 1 and 100 (included) prints the number followed by:
+
+* `"div2"` if the number is divisible by 2, with n the number;
+* `"div3"` if the number is divisible by 3;
+* `"prime"` if the number is prime.
+
+> Remember that `n % m == 0` is true if `n` is divisible by `m`.
+
+Write one version using `if` statements and another using `switch` statements.
