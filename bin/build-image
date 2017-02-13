@@ -1,0 +1,55 @@
+#! /usr/bin/env bash
+
+# Do not forget to install guest additions.
+# They depend on `make` and `gcc`.
+
+set -e
+
+where=${1:-"${HOME}/.local"}
+
+source /etc/lsb-release
+sudo -s -H -- <<"EOF"
+  set -e
+  apt-get update  --yes
+  apt-get upgrade --yes
+  apt-get install --yes \
+          curl \
+          docker.io \
+          git \
+          ssh \
+          clang libicu-dev \
+          lxde-core xfonts-base xserver-xorg
+  cat > /etc/lightdm/lightdm.conf.d/swift.conf <<EOM
+[SeatDefaults]
+autologin-user=${SUDO_USER}
+autologin-user-timeout=0
+EOM
+  usermod -aG docker "${SUDO_USER}"
+  curl -L https://swift.org/builds/swift-3.0.2-release/ubuntu1604/swift-3.0.2-RELEASE/swift-3.0.2-RELEASE-ubuntu16.04.tar.gz \
+       -o swift.tar.gz
+  tar xzf swift.tar.gz \
+      -C / \
+      --strip-components=1
+  curl -L https://github.com/atom/atom/releases/download/v1.14.1/atom-amd64.deb \
+       -o atom-amd64.deb
+  dpkg -i atom-amd64.deb || apt-get -f install --yes
+  rm   -f atom-amd64.deb
+  curl -L https://s3.amazonaws.com/downloads.wercker.com/cli/stable/linux_amd64/wercker \
+       -o wercker
+  mv wercker /usr/local/bin/
+  chmod a+x /usr/local/bin/wercker
+  apt-get clean
+EOF
+
+apm install language-swift
+apm install swift-debugger
+apm install linter-swiftc
+apm install autocomplete-swift
+apm install linter-swift-package-manager
+apm install build-xcodebuild
+
+mkdir -p "${HOME}/.config/autostart"
+cat >> "${HOME}/.config/lxsession/LXDE/autostart" <<"EOM"
+@atom
+@lxterminal
+EOM
