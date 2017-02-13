@@ -48,6 +48,28 @@ Another way to handle optional rvalues is use the infix operator `??` to provide
 let mark = studentMark ?? 0.0
 ```
 
+### Ternary Operator `_?_:_`
+
+The ternary operator is a syntactic sugar for that kind of code:
+
+```swift
+let x = 11
+let y: Int
+
+if x > 10 {
+  y = x / 2
+} else {
+  y = x * 2
+}
+```
+
+With the ternary operator, the above program can be rewritten as the following:
+
+```swift
+let x = 11
+let y = x > 10 ? x / 2 : x * 2
+```
+
 ## `switch` statements
 
 A `switch` statement allows to check for several *cases*.

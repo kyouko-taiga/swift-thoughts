@@ -61,6 +61,23 @@ Note that this should be done sparingly and **only when the variables are clearl
 let x, y: Int
 ```
 
+The type of an expression can be retrieved with the built-in function `type(of:)`:
+
+```swift
+print(type(of: 42))
+// Prints "Int"
+print(type(of: "Hello"))
+// Prints "String"
+```
+
+Types are first-class citizen, meaning that they can be assigned to variables (or constants), like any other value:
+
+```swift
+let someType = type(of: "Hello")
+print(someType)
+// Prints "String"
+```
+
 ## Optionals
 
 One interesting feature of Swift is its optional types.
