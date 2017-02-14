@@ -238,7 +238,7 @@ or more concrete data, like the possible configurations of a library.
 It is declared with the keyword `enum`, and its different values with the keyword `case`:
 
 ```swift
-enum PokemonType {
+enum SpeciesType {
   case grass
   case fire
   case water
@@ -248,7 +248,7 @@ enum PokemonType {
 It is sometimes preferable to declare the cases of an enumeration on a single line:
 
 ```swift
-enum PokemonType {
+enum SpeciesType {
   case grass, fire, water
 }
 ```
@@ -262,7 +262,7 @@ The cases of an enumeration can be assigned to a variable (or constant),
 like any other value:
 
 ```swift
-let bulbasaurType = PokemonType.grass
+let bulbasaurType = SpeciesType.grass
 print(bulbasaurType)
 // Prints "grass"
 ```
@@ -271,7 +271,7 @@ If the type of the variable (or constant) has already been inferred, or explicit
 it is possible (and preferred) to omit the name of the enumeration.
 
 ```swift
-let bulbasaurType: PokemonType
+let bulbasaurType: SpeciesType
 
 bulbasaurType = .grass
 // Prints "grass"
@@ -293,12 +293,12 @@ Associated values can also refer to another (or the same) case of the enumeratio
 Such enumeration are said *recursive*, and prefixed with the keyword `indirect`:
 
 ```swift
-indirect enum PokemonType {
+indirect enum SpeciesType {
   case grass, fire, water
-  case dual(primary: PokemonType, secondary: PokemonType)
+  case dual(primary: SpeciesType, secondary: SpeciesType)
 }
 
-let lotadType = PokemonType.dual(primary: .water, secondary: .grass)
+let lotadType = SpeciesType.dual(primary: .water, secondary: .grass)
 ```
 
 Enumerations are a powerful tool in Swift, and there would be much more to talk about.
@@ -311,7 +311,7 @@ An array is a collection of values of homogeneous type (e.g. a collection of `St
 They are declared with square brackets `[]`:
 
 ```swift
-let pokemons = [(001, "Bulbasaur"), (004, "Charmander"), (007, "Squirtle")]
+let species = [(001, "Bulbasaur"), (004, "Charmander"), (007, "Squirtle")]
 ```
 
 Thanks to Swift's type inference, the type of the above array hasn't to be explicitly defined.
@@ -319,14 +319,14 @@ However, if the values of the array weren't known when defining the constant,
 it would have been necessary to explicitly type it as there wouldn't have been any way to infer the type of the array.
 
 ```swift
-let pokemons: [Pokemon]
-pokemons = [(001, "Bulbasaur"), (004, "Charmander"), (007, "Squirtle")]
+let species: [Species]
+species = [(001, "Bulbasaur"), (004, "Charmander"), (007, "Squirtle")]
 ```
 
 To type an array **and** initialize it as empty, one can use the following syntax:
 
 ```swift
-let pokemons = [Pokemon]()
+let species = [Species]()
 ```
 
 > Behind the scene, the above line calls an initializer of the Array<String> type,
@@ -338,57 +338,57 @@ Their values can be accessed by subscripting the array (i.e. using the square br
 Using a negative number or an index equal to or greater than the size of the array will trigger a runtime error:
 
 ```swift
-let pokemons = [(001, "Bulbasaur"), (004, "Charmander"), (007, "Squirtle")]
-print(pokemons[1])
+let species = [(001, "Bulbasaur"), (004, "Charmander"), (007, "Squirtle")]
+print(species[1])
 // Prints "(4, "Charmander")"
 
-print(pokemons[3])
+print(species[3])
 // Error: EXC_BAD_INSTRUCTION
 ```
 
 Slices of an array can be accessed by using a range rather than an `Int` value as the index of the subscript:
 
 ```swift
-print(pokemons[0 ... 1])
+print(species[0 ... 1])
 // Prints "[(1, "Bulbasaur"), (4, "Charmander")]"
 ```
 
-Notice that in all the examples above, the `pokemons` array was declared as a constant (using the keyword `let`).
+Notice that in all the examples above, the `species` array was declared as a constant (using the keyword `let`).
 As a result, it becomes an immutable collection.
 It is neither possible to add (or remove) values to it, nor to change the value at a given index:
 
 ```swift
-let pokemons = [(001, "Bulbasaur"), (004, "Charmander"), (007, "Squirtle")]
-pokemons[0] = (025, "Pikachu")
-// Error: Immutable value 'pokemons' may not be assigned to
+let species = [(001, "Bulbasaur"), (004, "Charmander"), (007, "Squirtle")]
+species[0] = (025, "Pikachu")
+// Error: Immutable value 'species' may not be assigned to
 ```
 
 Mutable arrays have to be declared with the `var` keyword:
 
 ```swift
-var pokemons = [(001, "Bulbasaur"), (004, "Charmander"), (007, "Squirtle")]
-pokemons[0] = (025, "Pikachu")
-print(pokemons[0])
+var species = [(001, "Bulbasaur"), (004, "Charmander"), (007, "Squirtle")]
+species[0] = (025, "Pikachu")
+print(species[0])
 // Prints "(025, "Pikachu")"
 
-pokemons[1 ... 2] = [(043, "Oddish"), (016, "Pidgey")]
-print(pokemons)
+species[1 ... 2] = [(043, "Oddish"), (016, "Pidgey")]
+print(species)
 // Prints "[(25, "Pikachu"), (43, "Oddish"), (16, "Pidgey")]"
 ```
 
 Inserting a new value in an array can be performed with the `Array.insert(_:at:)` function:
 
 ```swift
-pokemons.insert((043, "Oddish"), at: 0)
-print(pokemons)
+species.insert((043, "Oddish"), at: 0)
+print(species)
 // Prints "[(43, "Oddish"), (25, "Pikachu"), (43, "Oddish"), (16, "Pidgey")]"
 ```
 
 Similarly, removing a value can be performed with the `Array.remove(at:)` function:
 
 ```swift
-pokemons.remove(at: 1)
-print(pokemons)
+species.remove(at: 1)
+print(species)
 // Prints "[(43, "Oddish"), (43, "Oddish"), (16, "Pidgey")]"
 ```
 
@@ -403,7 +403,7 @@ Swift doesn't have a dedicated syntax for sets.
 Instead, one should explicitly type set variables (or constants):
 
 ```swift
-let pokemonNames: Set = ["Bulbasaur", "Charmander", "Squirtle"]
+let speciesNames: Set = ["Bulbasaur", "Charmander", "Squirtle"]
 ```
 
 > Notice that the only difference with The syntax to declare array is the explicit typing `: Set`.
@@ -415,33 +415,33 @@ Should the set be declared before initialized (or initialized empty),
 the type of its values should also be defined explicitly:
 
 ```swift
-let pokemonNames = Set<String>()
+let speciesNames = Set<String>()
 ```
 
-> Notice that if we were to write `Set<Pokemon>`,
-> the compiler would complain about the `Pokemon` type not conforming to the `Hashable` protocol.
-> This is because the elements of a set must have some properties that our type `Pokemon` doesn't have.
+> Notice that if we were to write `Set<Species>`,
+> the compiler would complain about the `Species` type not conforming to the `Hashable` protocol.
+> This is because the elements of a set must have some properties that our type `Species` doesn't have.
 > We'll see later how we can extend a type so it respects these kind of properties.
 
 As arrays, sets are mutable if declared with `var`.
 Inserting a value in the set can be done with the `Set.insert(_:)` function:
 
 ```swift
-var pokemonNames: Set = ["Bulbasaur", "Charmander", "Squirtle"]
-pokemonNames.insert("Pidgey")
-print(pokemonNames.count)
+var speciesNames: Set = ["Bulbasaur", "Charmander", "Squirtle"]
+speciesNames.insert("Pidgey")
+print(speciesNames.count)
 // Prints 4
 ```
 
 > ❔
 >
-> What would `print(pokemonNames.count)` print if we had inserted `"Bulbasaur"` rather than `"Pidgey"`?
+> What would `print(speciesNames.count)` print if we had inserted `"Bulbasaur"` rather than `"Pidgey"`?
 
 Removing a value can be done with the `Set.remove(_:)` function:
 
 ```swift
-pokemonNames.remove("Pidgey")
-print(pokemonNames.count)
+speciesNames.remove("Pidgey")
+print(speciesNames.count)
 // Prints 3
 ```
 
@@ -457,25 +457,25 @@ Dictionaries are with a comma-separated list of of pairs `k: v`,
 where `k` is a key of type `K` and `v` its associated value of type `V`:
 
 ```swift
-let pokemonTypes = ["Bulbasaur": PokemonType.grass, "Charmander": PokemonType.fire]
+let speciesTypes = ["Bulbasaur": SpeciesType.grass, "Charmander": SpeciesType.fire]
 ```
 
 Should the dictionary be declared before initialized (or initialized empty), the types of its keys and values should also be defined explicitly:
 
 ```swift
-let pokemonTypes = [String: PokemonType]()
+let speciesTypes = [String: SpeciesType]()
 ```
 
 Dictionaries are indexed by their keys.
 Their values can be accessed by subscripting the dictionary (i.e. using the square brackets `[]`) with the desired key.
 
 ```swift
-let pokemonTypes = ["Bulbasaur": PokemonType.grass, "Charmander": PokemonType.fire]
-print(pokemonTypes["Bulbasaur"]!)
+let speciesTypes = ["Bulbasaur": SpeciesType.grass, "Charmander": SpeciesType.fire]
+print(speciesTypes["Bulbasaur"]!)
 // Prints "grass"
 ```
 
-Notice the suffix operator `!` after `pokemonTypes["Bulbasaur"]`.
+Notice the suffix operator `!` after `speciesTypes["Bulbasaur"]`.
 This is because the returned values of dictionary subscripts is an optional (i.e. if the type of its keys is `K`, the return type of its subscript is `K?`).
 Hence, if there's no value associated with the given key, the dictionary returns `nil`.
 
@@ -483,16 +483,16 @@ As arrays, dictionaries are mutable if declared with `var`.
 Inserting (or modifying) an entry association in a dictionary can be performed with its subscript:
 
 ```swift
-var pokemonTypes = ["Bulbasaur": "Grass", "Charmander": "Fire"]
-pokemonTypes["Oddish"] = .grass
-print(pokemonTypes["Oddish"]!)
+var speciesTypes = ["Bulbasaur": "Grass", "Charmander": "Fire"]
+speciesTypes["Oddish"] = .grass
+print(speciesTypes["Oddish"]!)
 // Prints "Grass"
 ```
 
 Removing an entry from a dictionary boils down to setting `nil` for the desired key:
 
 ```swift
-pokemonTypes["Charmander"] = nil
+speciesTypes["Charmander"] = nil
 ```
 
 ## Structs

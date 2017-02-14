@@ -1,6 +1,7 @@
 # Control Flow
 
-Swift uses `if`, `switch` or `guard` (which we'll discuss in another chapter) to make conditional statements, and `for-in`, `while` or `repeat-while` to make loops.
+Swift uses `if`, `switch` or `guard` to make conditional statements,
+and `for-in`, `while` or `repeat-while` to make loops.
 Parentheses around the conditions are optional (and shouldn't be used unless they make the code clearer).
 
 ## `if` statements
@@ -117,9 +118,9 @@ default:
 A `switch` statement can also be used to extract the values of an enumeration with associated values:
 
 ```swift
-indirect enum PokemonType { /* ... */ }
+indirect enum SpeciesType { /* ... */ }
 
-let lotadType = PokemonType.dual(primary: .water, secondary: .grass)
+let lotadType = SpeciesType.dual(primary: .water, secondary: .grass)
 
 switch lotadType {
 case .dual(primary: let primary, secondary: let secondary):
@@ -131,7 +132,7 @@ default:
 // Prints "the Pokemon has 2 types: water and grass"
 ```
 
-## `for-in`, `while` and `repeat-while` loops
+## `for-in` `while` and `repeat-while` loops
 
 A `for-in` loop iterates over a sequence of elements:
 
@@ -139,7 +140,6 @@ A `for-in` loop iterates over a sequence of elements:
 for i in 0 ... 2 {
   print(i)
 }
-
 // Prints "0"
 // Prints "1"
 // Prints "2"
@@ -151,17 +151,63 @@ for i in 0 ... 2 {
 > That is `0 ..< 2` creates a range from 0 to 2 but where 2 isn't included.
 
 The `for-in` loop can iterate over anything that is a sequence.
-For instance, a character string is also a sequenc of `Character`:
+For instance, a character string is also a sequence of `Character`:
 
 ```swift
 for character in "ヒトカゲ".characters {
     print(character)
 }
-
 // Prints "ヒ"
 // Prints "ト"
 // Prints "カ"
 // Prints "ゲ"
+```
+
+Arrays, sets and dictionaries are also sequences.
+Hence they can be iterated over with a `for-in` loop:
+
+```swift
+typealias Species = (number: Int, name: String)
+
+let species: [Species] = [(001, "Bulbasaur"), (004, "Charmander"), (007, "Squirtle")]
+for oneSpecies in species {
+  print(oneSpecies.name)
+}
+// Prints "Bulbasaur"
+// Prints "Charmander"
+// Prints "Squirtle"
+```
+
+> ❔
+>
+> What was the advantage of explicitly typing the array in the above example?
+
+Sets can be iterated similarly:
+
+```swift
+let speciesNames: Set = ["Bulbasaur", "Charmander", "Squirtle"]
+
+for speciesName in speciesNames {
+  print(speciesName)
+}
+// Prints "Bulbasaur"
+// Prints "Charmander"
+// Prints "Squirtle"
+```
+
+Dictionaries can be iterated as well.
+However, unlike arrays and sets,
+the iterated elements are tuples of key-value (i.e. tuples of type `(K, V)`):
+
+```swift
+indirect enum SpeciesType { /* ... */ }
+
+let speciesTypes = ["Bulbasaur": SpeciesType.grass, "Charmander": SpeciesType.fire]
+for (speciesName, speciesType) in speciesTypes {
+  print("species \(speciesName) has type \(speciesType)")
+}
+// Prints "species Charmander has type fire"
+// Prints "species Bulbasaur has type grass"
 ```
 
 A `while` loop repeats a block of code as long as its condition holds:
@@ -175,7 +221,8 @@ print(n)
 // Prints "128"
 ```
 
-A `repeat-while` loop words similarly, but checks the condition *after* the block is executed, rather than before
+A `repeat-while` loop words similarly, but checks the condition *after* the block is executed,
+rather than before:
 
 ```swift
 var n = 2
