@@ -228,6 +228,34 @@ In the above example, the `continue` statement skips the remainder of the inner 
 As soon as `y` gets to 2, the second `if` statement is checked.
 Since at `x` is equal to 0 at that particular moment, the `break` statement ends the outer loop and transfer the control to the remainder of the program.
 
+## `guard` statements
+
+A `guard` statement is similar to an `if` statement, but should be preferred in situations when some condition should hold for the program flow to continue:
+
+```swift
+let studentName = "Takeshi Satou"
+let studentMark: Double? = 4.7
+
+switch studentName {
+case "Takeshi Satou":
+  guard let mark = studentMark else {
+    print("Takeshi Satou didn't attend the exam")
+    break
+  }
+  print("Takeshi Satou got the mark \(studentMark)")
+
+default:
+  break
+}
+```
+
+> Notice the use of the `break` keyword in the `else` clause of the guard.
+> This is because `guard` should always transfer control if the condition doesn't hold, using `break`, `continue` or other kind of statements we'll see later.
+
+A `guard` statement can always be replaced with an `if` statement.
+The choice between the two depends solely on the programmer and is mostly a matter of preference.
+In some situations, one might produce a code clearer than the other.
+
 ## Exercise
 
 Write a program that for all natural numbers between 1 and 100 (included) prints the number followed by:

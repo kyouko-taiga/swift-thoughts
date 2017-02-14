@@ -1,7 +1,7 @@
 # Constants, Variables and Types
 
 Swift is statically **strongly** typed.
-It means that at compile time, Swift ensures that each variable (or constant) is unambiguously associated with a single type, and that each opration on that variable (or constant) is well defined for that type.
+It means that at compile time, Swift ensures that each variable (or constant) is unambiguously associated with a single type, and that each operation on that variable (or constant) is well defined for that type.
 
 ## Constants and Variables
 

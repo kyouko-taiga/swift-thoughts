@@ -130,7 +130,7 @@ print(pokemons)
 // Prints "["Bulbasaur", "Oddish", "Pidgey"]"
 ```
 
-Inserting a new value in an array can be performed with the `insert(_:at:)` method:
+Inserting a new value in an array can be performed with the `Array.insert(_:at:)` function:
 
 ```swift
 pokemons.insert("Oddish", at: 0)
@@ -138,7 +138,7 @@ print(pokemons)
 // Prints "["Oddish", "Bulbasaur", "Oddish", "Pidgey"]"
 ```
 
-Similarly, removing a value can be performed with the `remove(at:)` method:
+Similarly, removing a value can be performed with the `Array.remove(at:)` function:
 
 ```swift
 pokemons.remove(at: 1)
@@ -189,7 +189,7 @@ let pokemons = Set<String>()
 ```
 
 As arrays, sets are mutable if declared with `var`.
-Inserting a value in the set can be done with the `insert(_:)` method:
+Inserting a value in the set can be done with the `Set.insert(_:)` function:
 
 ```swift
 var pokemons: Set = ["Bulbasaur", "Charmander", "Squirtle"]
@@ -202,7 +202,7 @@ print(pokemons.count)
 >
 > What would `print(pokemons.count)` print if we had inserted `"Bulbasaur"` rather than `"Pidgey"`?
 
-Removing a value can be done with the `remove(_:)` method:
+Removing a value can be done with the `Set.remove(_:)` function:
 
 ```swift
 pokemons.remove("Pidgey")
