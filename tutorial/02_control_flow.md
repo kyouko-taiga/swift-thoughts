@@ -8,44 +8,44 @@ Parentheses around the conditions are optional (and shouldn't be used unless the
 An `if` statement allows to check for a condition:
 
 ```swift
-let studentMark = 4.7
+let pokemonLevel = 38
 
-if studentMark >= 4.0 {
-  print("the student passed the exam")
+if pokemonLevel > 30 {
+  print("the Pokemon won't obey")
 } else {
-  print("the student failed the exam")
+  print("the Pokemon will obey")
 }
 ```
 
 > Unlike in most languages of the C-family, Swift conditions **must** be a Boolean expression (i.e. of type `Bool`).
-> As a result, `if studentMark { ... }` wouldn't be a valid expression in the above example, and the compiler would complain about it.
+> As a result, `if pokemonLevel { ... }` wouldn't be a valid expression in the above example, and the compiler would complain about it.
 
 By combining an `if` and `let` together, one can also check whether an optional type is associated with a value, and assign that value to a new variable if it is.
 
 ```swift
-let studentMark: Double? = 4.7
+let pokemonLevel: Int? = 38
 
-if let mark = studentMark {
-  print("the student got the mark \(mark)")
+if let level = pokemonLevel {
+  print("the Pokemon level is \(level)")
 } else {
-  print("the student didn't attend the exam")
+  print("the Pokemon level is unknown")
 }
 ```
 
 Note that the above example is equivalent, but arguably clearer, than the following:
 
 ```swift
-if studentMark != nil {
- print("the student got the mark \(studentMark!)")
+if pokemonLevel != nil {
+ print("the Pokemon level is \(pokemonLevel!)")
 } else {
- print("the student didn't attend the exam")
+ print("the Pokemon level is unknown")
 }
 ```
 
 Another way to handle optional rvalues is use the infix operator `??` to provide a default value in case it is equal to `nil`:
 
 ```swift
-let mark = studentMark ?? 0.0
+let level = pokemonLevel ?? 1
 ```
 
 ### Ternary Operator `_?_:_`
@@ -75,23 +75,22 @@ let y = x > 10 ? x / 2 : x * 2
 A `switch` statement allows to check for several *cases*.
 
 ```swift
-let studentMark = 0.0
+let pokemonLevel = 51
 
-switch studentMark {
-case 0.0:
-  print("the student didn't attend the exam")
-case let x where x < 4.0:
-  print("the student failed the exam")
-case let x where x >= 4.0:
-  print("the student passed the exam")
+switch pokemonLevel {
+case let x where x > 50:
+  print("the Pokemon won't obey unless we have 4 badges")
+case let x where x > 30:
+  print("the Pokemon won't obey unless we have 2 badges")
 default:
-  break
+  print("the Pokemon will obey")
 }
 
-// Prints "the student didn't attend the exam"
+// Prints "the Pokemon won't obey unless we have 4 badges"
 ```
 
-If multiple the condition is true for multiple cases, the first (from top to bottom) one wins, as we can see in the above example.
+If the condition is true for multiple cases, the first (from top to bottom) one "wins",
+as we can see in the above example.
 A `switch` statement **must** cover all possible cases.
 Hence, it is often given a `default` clause which handles the cases where no other condition could be satisfied.
 
@@ -99,16 +98,37 @@ Notice how `let` can be used to match a pattern.
 This is a very powerful feature that isn't limited to comparison between numbers:
 
 ```swift
-let studentName = "Paulo Sérgio Costa de Oliveira"
+struct Pokemon { /* ... */ }
 
-switch studentName {
-case let x where x.characters.count > 20:
-  print("that's a long name")
-case let x where x.characters.count < 10:
-  print("that's a short name")
+let sparky = Pokemon(species: (number: 135, name: "Jolteon"), level: 31)
+
+switch sparky {
+case let pokemon where pokemon.species.name == "Jolteon":
+  print("the Pokemon is a Jolteon")
+case let pokemon where pokemon.level > 50:
+  print("the Pokemon won't obey unless we have 4 badges")
 default:
   break
 }
+
+// Prints "the Pokemon is a Jolteon"
+```
+
+A `switch` statement can also be used to extract the values of an enumeration with associated values:
+
+```swift
+indirect enum PokemonType { /* ... */ }
+
+let lotadType = PokemonType.dual(primary: .water, secondary: .grass)
+
+switch lotadType {
+case .dual(primary: let primary, secondary: let secondary):
+  print("the Pokemon has 2 types: \(primary) and \(secondary)")
+default:
+  print("the Pokemon has 1 type: \(lotadType)")
+}
+
+// Prints "the Pokemon has 2 types: water and grass"
 ```
 
 ## `for-in`, `while` and `repeat-while` loops
@@ -131,19 +151,17 @@ for i in 0 ... 2 {
 > That is `0 ..< 2` creates a range from 0 to 2 but where 2 isn't included.
 
 The `for-in` loop can iterate over anything that is a sequence.
-We'll talk about that in more details later.
-For now, let's just illustrate that with another example of sequence:
+For instance, a character string is also a sequenc of `Character`:
 
 ```swift
-for character in "こんにちは".characters {
+for character in "ヒトカゲ".characters {
     print(character)
 }
 
-// Prints "こ"
-// Prints "ん"
-// Prints "に"
-// Prints "ち"
-// Prints "は"
+// Prints "ヒ"
+// Prints "ト"
+// Prints "カ"
+// Prints "ゲ"
 ```
 
 A `while` loop repeats a block of code as long as its condition holds:
@@ -233,37 +251,29 @@ Since at `x` is equal to 0 at that particular moment, the `break` statement ends
 A `guard` statement is similar to an `if` statement, but should be preferred in situations when some condition should hold for the program flow to continue:
 
 ```swift
-let studentName = "Takeshi Satou"
-let studentMark: Double? = 4.7
+struct Pokemon { /* ... */ }
 
-switch studentName {
-case "Takeshi Satou":
-  guard let mark = studentMark else {
-    print("Takeshi Satou didn't attend the exam")
+let bulby = Pokemon(species: (number: 001, name: "Bulbasaur"), level: 8)
+
+switch bulby {
+case let pokemon where pokemon.species.name == "Bulbasaur":
+  guard pokemon.level >= 16 else {
+    print("the Pokemon cannot evolve yet")
     break
   }
-  print("Takeshi Satou got the mark \(studentMark)")
+  print("the Pokemon can evolve")
 
 default:
   break
 }
+
+// Prints "the Pokemon cannot evolve yet"
 ```
 
 > Notice the use of the `break` keyword in the `else` clause of the guard.
-> This is because `guard` should always transfer control if the condition doesn't hold, using `break`, `continue` or other kind of statements we'll see later.
+> This is because `guard` should always transfer control if the condition doesn't hold,
+> using `break`, `continue` or other kind of statements we'll see later.
 
 A `guard` statement can always be replaced with an `if` statement.
 The choice between the two depends solely on the programmer and is mostly a matter of preference.
 In some situations, one might produce a code clearer than the other.
-
-## Exercise
-
-Write a program that for all natural numbers between 1 and 100 (included) prints the number followed by:
-
-* `"div2"` if the number is divisible by 2, with n the number;
-* `"div3"` if the number is divisible by 3;
-* `"prime"` if the number is prime.
-
-> Remember that `n % m == 0` is true if `n` is divisible by `m`.
-
-Write one version using `if` statements and another using `switch` statements.

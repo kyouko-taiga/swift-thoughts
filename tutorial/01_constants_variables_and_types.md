@@ -230,6 +230,81 @@ let bulbasaur: Species = (001, "Bulbasaur")
 > and since the order in which the variables of a tuples are stored never changes.
 > So we still can refer to `bulbasaur.name` or `bulbasaur.1` interchangeably.
 
+## Enumerations
+
+An enumeration defines a a set of possible values for a type, allowing for safer and more intuitive code.
+It can represent very abstract concepts, like a set of possible shapes,
+or more concrete data, like the possible configurations of a library.
+It is declared with the keyword `enum`, and its different values with the keyword `case`:
+
+```swift
+enum PokemonType {
+  case grass
+  case fire
+  case water
+}
+```
+
+It is sometimes preferable to declare the cases of an enumeration on a single line:
+
+```swift
+enum PokemonType {
+  case grass, fire, water
+}
+```
+
+> An enumeration is a type.
+> By convention, all type names start with a capital letter (`Int`, `String`, ...) and so should enumerations.
+> The name of an enumeration should also be singular rather than plural,
+> so that its use makes more sense your the code.
+
+The cases of an enumeration can be assigned to a variable (or constant),
+like any other value:
+
+```swift
+let bulbasaurType = PokemonType.grass
+print(bulbasaurType)
+// Prints "grass"
+```
+
+If the type of the variable (or constant) has already been inferred, or explicitly defined,
+it is possible (and preferred) to omit the name of the enumeration.
+
+```swift
+let bulbasaurType: PokemonType
+
+bulbasaurType = .grass
+// Prints "grass"
+```
+
+Enumerations can store *associated values* with one or multiple of its cases.
+This permits to associate more information with a particular case:
+
+```swift
+enum Item {
+  case pokeball(catchRateMultiplier: Double)
+  case potion(restoration: Int)
+}
+
+let ultraBall = Consumable.pokeball(catchRateMultiplier: 2)
+```
+
+Associated values can also refer to another (or the same) case of the enumeration.
+Such enumeration are said *recursive*, and prefixed with the keyword `indirect`:
+
+```swift
+indirect enum PokemonType {
+  case grass, fire, water
+  case dual(primary: PokemonType, secondary: PokemonType)
+}
+
+let lotadType = PokemonType.dual(primary: .water, secondary: .grass)
+```
+
+Enumerations are a powerful tool in Swift, and there would be much more to talk about.
+However, as this tutorial doesn't try to be exhaustive,
+we invite the reader to check [Apple's language guide](https://developer.apple.com/library/content/documentation/Swift/Conceptual/Swift_Programming_Language/Enumerations.html) for more information and/or examples.
+
 ## Arrays
 
 An array is a collection of values of homogeneous type (e.g. a collection of `String` values).
@@ -382,41 +457,34 @@ Dictionaries are with a comma-separated list of of pairs `k: v`,
 where `k` is a key of type `K` and `v` its associated value of type `V`:
 
 ```swift
-let pokemonTypes = ["Bulbasaur": "Grass", "Charmander": "Fire"]
+let pokemonTypes = ["Bulbasaur": PokemonType.grass, "Charmander": PokemonType.fire]
 ```
 
 Should the dictionary be declared before initialized (or initialized empty), the types of its keys and values should also be defined explicitly:
 
 ```swift
-let pokemonTypes = [String: String]()
+let pokemonTypes = [String: PokemonType]()
 ```
 
 Dictionaries are indexed by their keys.
 Their values can be accessed by subscripting the dictionary (i.e. using the square brackets `[]`) with the desired key.
 
 ```swift
-let pokemonTypes = ["Bulbasaur": "Grass", "Charmander": "Fire"]
+let pokemonTypes = ["Bulbasaur": PokemonType.grass, "Charmander": PokemonType.fire]
 print(pokemonTypes["Bulbasaur"]!)
+// Prints "grass"
 ```
 
 Notice the suffix operator `!` after `pokemonTypes["Bulbasaur"]`.
 This is because the returned values of dictionary subscripts is an optional (i.e. if the type of its keys is `K`, the return type of its subscript is `K?`).
 Hence, if there's no value associated with the given key, the dictionary returns `nil`.
 
-```swift
-if let type = pokemonTypes["Squirtle"] {
-  print("Squirtle has type \(type)")
-} else {
-  print("We don't know the type of Squirtle")
-}
-```
-
 As arrays, dictionaries are mutable if declared with `var`.
 Inserting (or modifying) an entry association in a dictionary can be performed with its subscript:
 
 ```swift
 var pokemonTypes = ["Bulbasaur": "Grass", "Charmander": "Fire"]
-pokemonTypes["Oddish"] = "Grass"
+pokemonTypes["Oddish"] = .grass
 print(pokemonTypes["Oddish"]!)
 // Prints "Grass"
 ```
@@ -426,81 +494,6 @@ Removing an entry from a dictionary boils down to setting `nil` for the desired 
 ```swift
 pokemonTypes["Charmander"] = nil
 ```
-
-## Enumerations
-
-An enumeration defines a a set of possible values for a type, allowing for safer and more intuitive code.
-It can represent very abstract concepts, like a set of possible shapes,
-or more concrete data, like the possible configurations of a library.
-It is declared with the keyword `enum`, and its different values with the keyword `case`:
-
-```swift
-enum PokemonType {
-  case grass
-  case fire
-  case water
-}
-```
-
-It is sometimes preferable to declare the cases of an enumeration on a single line:
-
-```swift
-enum PokemonType {
-  case grass, fire, water
-}
-```
-
-> An enumeration is a type.
-> By convention, all type names start with a capital letter (`Int`, `String`, ...) and so should enumerations.
-> The name of an enumeration should also be singular rather than plural,
-> so that its use makes more sense your the code.
-
-The cases of an enumeration can be assigned to a variable (or constant),
-like any other value:
-
-```swift
-let bulbasaurType = PokemonType.grass
-print(bulbasaurType)
-// Prints "grass"
-```
-
-If the type of the variable (or constant) has already been inferred, or explicitly defined,
-it is possible (and preferred) to omit the name of the enumeration.
-
-```swift
-let bulbasaurType: PokemonType
-
-bulbasaurType = .grass
-// Prints "grass"
-```
-
-Enumerations can store *associated values* with one or multiple of its cases.
-This permits to associate more information with a particular case:
-
-```swift
-enum Item {
-  case pokeball(catchRateMultiplier: Double)
-  case potion(restoration: Int)
-}
-
-let ultraBall = Consumable.pokeball(catchRateMultiplier: 2)
-```
-
-Associated values can also refer to another (or the same) case of the enumeration.
-Such enumeration are said *recursive*, and prefixed with the keyword `indirect`:
-
-```swift
-indirect enum PokemonType {
-  case grass, fire, water
-  case dual(primary: PokemonType, secondary: PokemonType)
-}
-
-let lotad = PokemonType.dual(primary: .water, secondary: .grass)
-```
-
-Enumerations are a powerful tool in Swift, and there would be much more to talk about.
-However, as this tutorial doesn't try to be exhaustive,
-we invite the reader to check [Apple's language guide](https://developer.apple.com/library/content/documentation/Swift/Conceptual/Swift_Programming_Language/Enumerations.html) for more information and/or examples.
 
 ## Structs
 
