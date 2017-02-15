@@ -440,6 +440,25 @@ print(primes)
 // Prints "[3, 5, 7]"
 ```
 
+It might not seem obvious, but closures are reference types:
+
+```swift
+var globalNumber = 0
+let incrementer = {
+    globalNumber += 1
+}
+
+incrementer()
+print(globalNumber)
+```
+
+In the above example, even if `incrementer` is a constant,
+it is still able to mutate the `globalNumber` it captured.
+This behavior reminds that of the classes, as we illustrated in Chapter 1.
+
+As for classes, this also means that assigning two variables to different variables (or constants)
+will make them refer to the exact same closure.
+
 ## Functions and Closures as return type
 
 As seen earlier, functions are first-class citizen and can be used as arguments of other functions.

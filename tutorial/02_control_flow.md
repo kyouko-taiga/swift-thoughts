@@ -49,6 +49,31 @@ Another way to handle optional rvalues is use the infix operator `??` to provide
 let level = pokemonLevel ?? 1
 ```
 
+When working with enumerations, the keywords `if` and `case` can be used together to test for a particular case:
+
+```swift
+indirect enum SpeciesType { /* ... */ }
+
+let lotadType = SpeciesType.dual(primary: .water, secondary: .grass)
+
+if case .dual(primary: let primary, secondary: let secondary) = lotadType {
+  print("Lotad has two types: \(primary) and \(secondary)")
+}
+// Prints "Lotad has two types: water and grass"
+```
+
+This feature is called pattern matching and is able to match a variety of patterns:
+
+```swift
+if case 0 ... 10 = someNumber {
+  print("the number is comprised between 0 and 10")
+}
+
+if case let (x, y) = someTuple, x > y {
+  print("\(x) is greater than \(y)")
+}
+```
+
 ### Ternary Operator `_?_:_`
 
 The ternary operator is a syntactic sugar for that kind of code:
@@ -95,8 +120,25 @@ as we can see in the above example.
 A `switch` statement **must** cover all possible cases.
 Hence, it is often given a `default` clause which handles the cases where no other condition could be satisfied.
 
-Notice how `let` can be used to match a pattern.
-This is a very powerful feature that isn't limited to comparison between numbers:
+Unlike in most C-family languages, Swift's doesn't require a `break` after each case block.
+Instead, only the code explicitly written in the matched case is executed,
+and the `switch` statement transfers control as soon as it's finished.
+If multiple cases should be handled by the same code, they should be separated by a comma:
+
+```swift
+let pokemonLevel = 4
+
+switch pokemonLevel {
+case 2, 4, 6:
+  print("the Pokemon level is 2, 4 or 6")
+default:
+  break
+}
+
+// Prints "the Pokemon level is 2, 4 or 6"
+```
+
+Notice how like its `if` counterpart, a `switch` statement supports pattern matching:
 
 ```swift
 struct Pokemon { /* ... */ }
@@ -131,6 +173,21 @@ default:
 
 // Prints "the Pokemon has 2 types: water and grass"
 ```
+
+> Unlike in pattern matching with `if-statement`,
+> checking additional constraints on matched variables requires the use of the keyword `where`,
+> rather than separating them with a comma:
+>
+> ```swift
+> if case let (x, y) = someType, x > y { /* ... */ }
+>
+> switch someTuple {
+> case let (x, y) where x > y: /* ... */
+> default: break
+> }
+> ```
+>
+> The reason is that the comma also serves as a separator for multiple cases.
 
 ## `for-in` `while` and `repeat-while` loops
 
@@ -208,6 +265,22 @@ for (speciesName, speciesType) in speciesTypes {
 }
 // Prints "species Charmander has type fire"
 // Prints "species Bulbasaur has type grass"
+```
+
+The `for-in` loop also supports pattern matching:
+
+```swift
+let speciesTypes = [
+  "Bulbasaur": SpeciesType.grass,
+  "Ivysaur": SpeciesType.grass,
+  "Charmander": SpeciesType.fire
+]
+
+for case let (name, _) in speciesTypes where name.hasSuffix("aur") {
+  print(name)
+}
+// Prints "Bulbasaur"
+// Prints "Ivysaur"
 ```
 
 A `while` loop repeats a block of code as long as its condition holds:
