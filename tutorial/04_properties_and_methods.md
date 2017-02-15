@@ -52,6 +52,10 @@ print(bulby.stepsWalkedWithTrainer)
 // Prints "2763"
 ```
 
+> In the above example, `self` is a constant that contains the value of the `Pokemon` instance.
+> This variable is available to the getter and setter because they act like a method,
+> which will discuss further below.
+
 A stored property `stepsWalkedWithTrainer` has been added,
 which keeps track of the number of steps a trainer walked with his/her Pokemon.
 A computed property `kmWalkedWithTrainer` computes the number of kilometers it represents when accessed,
@@ -337,17 +341,242 @@ enum SomeEnum {
 }
 ```
 
-## Instance Methods
+## Methods
+
+A method is a function that is associated with a particular instance of a type.
+They can be seen as a function (like the ones we've seen in Chapter 3)
+that always captures (by value or reference) the instance it is associated with,
+and assigns it to a special variable `self`.
+Methods have the exact same syntax as functions:
+
+```swift
+struct Trainer {
+  let name: String
+  var friends: [Trainer]
+
+  func isFriends(with anotherTrainer: Trainer) -> Bool {
+    return self.friends.contains(where: { $0.name == anotherTrainer.name })
+  }
+}
+
+var ash = Trainer(name: "Ash", friends: [])
+var brock = Trainer(name: "Brock", friends: [])
+
+ash.friends.append(brock)
+print(ash.isFriends(with: brock))
+// Prints "true"
+```
+
+> It is not mandatory to prepend a type's own property with `self` inside a method.
+> Hence, we could have written only `firends.contains(...)` in the body of `isFriend(with:)`,
+> since `friends` is a property of `Trainer`.
+> However, we strongly discourage this practice, because it can lead to ambiguity.
+
+Friendship is *usually* a commutative relation.
+In the above example however, setting that Brock is a friend of Ash doesn't make Ash a friend of Brock.
+Doing that with a struct can prove challenging.
+Remembering that structs are value types,
+a struct's method (or property getter, setter or observer) isn't allowed to mutate the struct.
+That's because if an instance is declared as a constant,
+calling this method would lead to a contradiction:
+
+```swift
+struct Trainer {
+    /* ... */
+
+    func makeFriends(with anotherTrainer: Trainer) {
+        self.friends.append(anotherTrainer)
+        // Error: Cannot use mutating member on immutable value: 'self' is immutable
+        anotherTrainer.friends.append(self)
+        // Error: Cannot use mutating member on immutable value: 'anotherTrainer' is a 'let' constant
+    }
+}
+```
+
+In the above example, the compiler error states exactly what we've been discussing.
+In order to mark `self` as mutable, the keyword `mutating` should prefix the method declaration.
+The second error is more familiar, as we've encountered it in Chapter 3.
+It states that since `anotherTrainer` is a constant,
+it is not allowed to change one of its property.
+As a result, it should be marked as an `inout` parameter:
+
+```swift
+struct Trainer {
+    /* ... */
+
+    mutating func makeFriends(with anotherTrainer: inout Trainer) {
+        self.friends.append(anotherTrainer)
+        anotherTrainer.friends.append(self)
+    }
+}
+```
+
+Because classes are reference types,
+their methods never have to be marked `mutating`.
+Even if the reference is a constant,
+the variables of the references instance can be mutated.
+
+```swift
+class Trainer {
+  /* ... */
+
+  func makeFriends(with anotherTrainer: Trainer) {
+      self.friends.append(anotherTrainer)
+      anotherTrainer.friends.append(self)
+  }
+}
+```
+
+Behind the scenes, a mutating method is actually a method that returns the instance's type.
+When called, Swift assign the variable to which the instance is assigned to the result of the method.
+This allows for an arguably clearer programming style,
+while preserving the value semantics.
+Incidentally, it is possible to assign `self` to a complete new instance in a mutating struct method:
+
+```swift
+struct Pokemon {
+    let species: Species
+    var level: Int
+
+    mutating func evolve() {
+        self = Pokemon(species: (002, "Ivysaur"), level: self.level)
+    }
+}
+
+var bulby = Pokemon(species: (001, "Bulbasaur"), level: 16)
+bulby.evolve()
+print(bulby)
+// Prints "Pokemon(species: (2, "Ivysaur"), level: 16)"
+```
+
+Had `evolve()` been a non-mutating method that returns a new instance of `Pokemon`,
+the above code would be equivalent to:
+
+```swift
+struct Pokemon {
+    let species: Species
+    var level: Int
+
+    func evolve() -> Pokemon {
+        return Pokemon(species: (002, "Ivysaur"), level: self.level)
+    }
+}
+
+var bulby = Pokemon(species: (001, "Bulbasaur"), level: 16)
+bulby = bulby.evolve()
+print(bulby)
+// Prints "Pokemon(species: (2, "Ivysaur"), level: 16)"
+```
+
+Enumeration can also declare methods:
 
 ```swift
 indirect enum SpeciesType {
   case grass, fire, water
   case dual(primary: SpeciesType, secondary: SpeciesType)
 
-  func hasType(_ speciesType: SpeciesType) -> Bool {
+  func combine(with anotherType: SpeciesType) -> SpeciesType {
+    return .dual(primary: self, secondary: anotherType)
+  }
+}
 
+var lotadType = SpeciesType.water.combine(with: .grass)
+```
+
+Like functions, methods can be defined with default arguments and/or be overloaded:
+
+```swift
+struct Pokemon {
+  let species: Species
+  var level: Int
+
+  mutating func levelUp(by levels: Int = 1) {
+    self.level += levels
   }
 }
 ```
 
-## Type methods
+Finally, similarly as type properties,
+Swift allows to define type methods on structs, classes and enumerations.
+They are defined with the keyword `static`:
+
+```swift
+struct Pokemon {
+  /* ... */
+
+  static func createFromSpecies(_ species: Species) -> Pokemon {
+    return Pokemon(species: species, level: 1)
+  }
+}
+
+let bulby = Pokemon.createFromSpecies((001, "Bulbasaur"))
+```
+
+## Subscripts
+
+We've already used subscripts with arrays and dictionaries,
+to get an indexed value:
+
+```swift
+let letters = ["A", "s", "h"]
+print(letters[1])
+// Prints "h"
+```
+
+Custom subscripts can be defined on structs, classes and enumerations.
+For instance, here is a (rather poor) alternative implementation of a dictionary of `Int: String`:
+
+```swift
+struct InefficientDictionary {
+    var storage: [(Int, String)]
+
+    subscript(key: Int) -> String? {
+        get {
+            if let (_, value) = self.storage.first(where: { k, _ in k == key}) {
+                return value
+            }
+            return nil
+        }
+
+        set {
+            if let index = self.storage.index(where: { k, _ in k == key }) {
+                if let value = newValue {
+                    self.storage[index].1 = value
+                } else {
+                    self.storage.remove(at: index)
+                }
+            } else {
+                if let value = newValue {
+                    self.storage.append((key, value))
+                }
+            }
+        }
+    }
+}
+
+var pokedex = InefficientDictionary(storage: [])
+pokedex[001] = "Bulbasaur"
+print(pokedex[001]!)
+// Prints "Bulbasaur"
+```
+
+Similarly to computed properties,
+the `get` keyword can be dropped if the subscript should only be used to read a value.
+
+Most of the time, subscripts accept only one argument.
+But several can be defined as well.
+For instance, it is a common practice to represent a matrix n × m as a 1-dimensional array:
+
+```swift
+struct Matrix {
+  var grid: [Int]
+
+  subscript(row: Int, column: Int) -> Int {
+    return self.grid[row * column + column]
+  }
+}
+
+let matrix = Matrix(grid: [0, 1, 2, 3])
+print(matrix[1, 1])
+// Prints "3"
+```

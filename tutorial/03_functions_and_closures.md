@@ -19,7 +19,7 @@ func minInt(lhs: Int, rhs: Int) -> Int {
 ```
 
 Like in mathematics, a function has a signature (i.e. a domain and a codomain).
-In the above example, the signature of the function is `Int, Int -> Int`,
+In the above example, the signature of the function is `(Int, Int) -> Int`,
 meaning that it takes two `Int` parameters and returns one `Int` value.
 
 When referring to the signature of Swift functions in comments and documentation,
@@ -84,13 +84,13 @@ Maybe because it just prints some value on the console, or it has some other sid
 In those case, the return type of the function is `()` (read as "void"), but is not required to be specified explicitly:
 
 ```swift
-func printWelcomeMessage(to name: String) {
+func greet(_ name: String) {
   print("Welcome \(name)!")
 }
 
-printWelcomeMessage(to: "Maria")
-// Prints  "Welcome Maria!"
-print(type(of: printWelcomeMessage))
+greet("Brock")
+// Prints  "Welcome Brock!"
+print(type(of: greet))
 // Prints "(String) -> ()"
 ```
 
@@ -115,7 +115,78 @@ func minInt(_ lhs: Int, _ rhs: Int) -> Int {
 minInt(1, 2)
 ```
 
-### Inout Parameters
+## Default Arguments and Overloading
+
+It it possible to define default arguments on function parameters:
+
+```swift
+func greet(_ name: String, with message: String = "Welcome") {
+  print("\(message) \(name)!")
+}
+
+greet("Brock", with: "Hello")
+// Prints "Hello Brock!"
+greet("Brock")
+// Prints "Welcome Brock!"
+```
+
+Because of the default argument on its `message` parameter,
+there are two ways to call the `greet(_:with:)` function,
+as illustrated in the example.
+In fact, one could say that there are two versions of the function:
+
+* there's the `greet(_:with:)` function, whose signature is `(String, String) -> ()`; and
+* there's the `greet(_:)` function, whose signature is `(String) -> ()`.
+
+Another way to describe the same two functions is to *overload* `greet(_:with:)` with a different signature:
+
+```swift
+func greet(_ name: String, with message: String = "Welcome") {
+  print("\(message) \(name)!")
+}
+
+func greet(_ name: String) {
+  print("Welcome \(name)!")
+}
+
+greet("Brock", with: "Hello")
+// Prints "Hello Brock!"
+greet("Brock")
+// Prints "Welcome Brock!"
+```
+
+Function overloading is actually much more powerful than default arguments,
+because the signatures can be totally unrelated:
+
+```swift
+func greet(_ name: String) {
+  print("Welcome \(name)!")
+}
+
+func greet(_ names: [String]) {
+  greet(names.joined(separator: ", "))
+}
+
+greet("Brock")
+// Prints "Welcome Brock!"
+greet(["Brock", "Misty"])
+// Prints "Welcome Brock, Misty!"
+```
+
+Function overloading and default arguments can be combined to create even more combinations.
+For instance, there are four versions of the `greet` function in the following example:
+
+```swift
+func greet(_ name: String, with message: String = "Welcome") {
+  print("Welcome \(name)!")
+}
+
+func greet(_ names: [String], with message: String = "Welcome") {
+  greet(names.joined(separator: ", "), with: message)
+}
+```
+
+## Inout Parameters
 
 In the body of a function, the arguments are declared as `let` constants.
 That means a function can't modify the value of its argument:
@@ -147,7 +218,8 @@ func swapPokemon(_ aPokemon: Pokemon, _ anotherPokemon: Pokemon) -> (Pokemon, Po
 However, this is a bit deceiving, as this function doesn't solve the problem it was written for.
 Indeed, one would still have to assign its result to the variables it was supposed to swap.
 
-Hence, although often discouraged it is sometimes necessary to define mutable parameters in Swift,
+Hence, although often recommended against,
+it is sometimes necessary to define mutable parameters in Swift,
 marking them as *inout*:
 
 ```swift
@@ -530,7 +602,7 @@ See Wikipedia for more information about [currying](https://en.wikipedia.org/wik
 
 The goal of this chapter is not to be exhaustive, but to give you enough information to get started.
 There's is much more things to be said about functions and closures,
-about capture semantics, about auto-closures, overloading, variadic parameters, ...
+about capture semantics, about auto-closures, variadic parameters, ...
 
 Some topics will be discussed later in this tutorial, some won't.
 We invite the reader to consult sections related to [functions](https://developer.apple.com/library/prerelease/content/documentation/Swift/Conceptual/Swift_Programming_Language/Functions.html#//apple_ref/doc/uid/TP40014097-CH10-ID158) and [closures](https://developer.apple.com/library/prerelease/content/documentation/Swift/Conceptual/Swift_Programming_Language/Closures.html#//apple_ref/doc/uid/TP40014097-CH11-ID94) in Apple's language guide for more information and/or examples.
