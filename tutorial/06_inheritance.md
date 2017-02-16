@@ -27,9 +27,10 @@ class PokemonLover {
     self.name = name
   }
 
-  convenience init(name: String, bestFriend: Trainer) {
+  convenience init(name: String, bestFriend: PokemonLover) {
     self.init(name: name)
     self.friends = [bestFriend]
+    bestFriend.friends.append(self)
   }
 
   func makeFriends(with another: PokemonLover) {
@@ -218,7 +219,7 @@ class EliteFourMember: Trainer {
   /* ... */
 
   override func makeFriends(with another: PokemonLover) {
-    guard anotherTrainer is EliteFourMember else {
+    guard another is EliteFourMember else {
       print("Elite Four members make friends with other Elite Four members only")
       return
     }
