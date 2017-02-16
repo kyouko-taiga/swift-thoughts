@@ -123,20 +123,20 @@ the only job of its inits initializer(s) is to provide a value for `self`:
 
 ```swift
 indirect enum SpeciesType {
-    case grass, fire, water
-    case dual(primary: SpeciesType, secondary: SpeciesType)
-    case unknown
+  case grass, fire, water
+  case dual(primary: SpeciesType, secondary: SpeciesType)
+  case unknown
 
-    init(fromSpecies species: Species) {
-        switch species.name {
-        case "Bulbasaur":
-            self = .grass
-        case "Charmander":
-            self = .fire
-        default:
-            self = .unknown
-        }
+  init(fromSpecies species: Species) {
+    switch species.name {
+    case "Bulbasaur":
+      self = .grass
+    case "Charmander":
+      self = .fire
+    default:
+      self = .unknown
     }
+  }
 }
 
 let bulbasaurType = SpeciesType(fromSpecies: (001, "Bulbasaur"))
@@ -253,3 +253,73 @@ class Trainer {
 > when we'll talk about class inheritance, later in this tutorial.
 
 ## Failable Initializers
+
+It sometimes happens that the success or failure of a struct, class or enumeration initialization cannot be decided statically.
+For instance, a struct may read its properties from an external source (like a database or an archive),
+from which the data may have been corrupted.
+Swift allows to declare initializers as *failable* to handle this kind of situations.
+A failable initializer can either successfully initialize its type,
+or "return" `nil` if the initialization failed.
+They are declared by appending `?` after the `init` keyword:
+
+```swift
+let speciesList = [(001, "Bulbasaur"), (004, "Charmander"), (007, "Squirtle")]
+
+struct Pokemon {
+  let species: Species
+  var level: Int
+
+  init?(speciesNumber: Int, level: Int = 1) {
+    guard let species = speciesList.first(
+      where: { number, _ in number == speciesNumber }) else {
+      return nil
+    }
+
+    self.species = species
+    self.level = level
+  }
+}
+```
+
+In the above example, it is possible to instantiate `Pokemon` with a species number.
+However, there's no way to ensure that the given species number is known at compile time.
+Hence, the constructor is marked failable,
+and a guard makes sure the species number is valid before initializing the object.
+
+When instantiating a type with a failable initializer,
+the returned object is always an optional of that type:
+
+```swift
+let bulby = Pokemon(speciesNumber: 001)
+print(type(of: bulby))
+// Prints "Optional<Pokemon>"
+```
+
+Enumerations can also declare a failable initializer.
+This is particularly useful when there's no valid case that matches the initializer arguments.
+For instance, our earlier example of initializer for `SpeciesType` could be rewritten
+without the need of the additional `unknown` case:
+
+```swift
+indirect enum SpeciesType {
+  case grass, fire, water
+  case dual(primary: SpeciesType, secondary: SpeciesType)
+  
+  init(fromSpecies species: Species) {
+    switch species.name {
+    case "Bulbasaur":
+      self = .grass
+    case "Charmander":
+      self = .fire
+    default:
+      return nil
+    }
+  }
+}
+```
+
+> Notice that we **return** `nil` rather than assigning it to `self`.
+
+Note that a non-failable initializer cannot delegate (neither in value types nor in classes) to a failable initializer.
+A failable initializer on the other hand may do so,
+and potential initialization failure will be propagated along the delegation chain.

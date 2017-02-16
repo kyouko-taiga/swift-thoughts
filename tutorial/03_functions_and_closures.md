@@ -5,7 +5,7 @@ As a program grows in complexity, they often become (and should be) inevitable.
 
 Actually, we've already used some functions so far, like `print(:_)`, `type(of:)` or `Array.insert(_:at:)`.
 
-> Disclaimer: Swift is **not** a functional language.
+> Disclaimer for the Haskell lovers: Swift is **not** a functional language.
 > However, it supports this style of programming very well, as its functions are first-class citizen.
 
 ## Function Signatures
