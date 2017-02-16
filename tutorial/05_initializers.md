@@ -304,7 +304,7 @@ without the need of the additional `unknown` case:
 indirect enum SpeciesType {
   case grass, fire, water
   case dual(primary: SpeciesType, secondary: SpeciesType)
-  
+
   init(fromSpecies species: Species) {
     switch species.name {
     case "Bulbasaur":
