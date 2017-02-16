@@ -1,7 +1,15 @@
 # Introduction to Swift programming
 
 Swift is an open source general purpose programming language developed by Apple.
-While the primary goal of Swift was to replace Objective-C for the design and realisation of macOS and iOS applications, it has since gained popularity on the server-side.
+While the primary goal of Swift was to replace Objective-C for the deelopment of macOS and iOS applications,
+it has since gained popularity in other domains, such as the web frameworks.
 
-The goal of this tutorial is for you to become familiar with Swift and its concepts.
-Most of the presented examples are inspired by the Apple guide on Swift: [The Swift Programming Language](https://developer.apple.com/library/content/documentation/Swift/Conceptual/Swift_Programming_Language/index.html#//apple_ref/doc/uid/TP40014097).
+This tutorial presents the important notions in Swift.
+It is inspired by the [Swift Programming Language Documentation](https://developer.apple.com/library/prerelease/content/documentation/Swift/Conceptual/Swift_Programming_Language).
+
+It presents all notions in a consistent order.
+All notions are illustrated with examples that incrementally build a small application:
+a Pokemon simulator.
+
+All the code snippets can be copy/pasted into the Swift [REPL](https://en.wikipedia.org/wiki/Read–eval–print_loop).
+Just run the `swift` command in a terminal to get it.

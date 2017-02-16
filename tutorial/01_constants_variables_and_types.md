@@ -1,154 +1,215 @@
 # Constants, Variables and Types
 
-Swift is statically [strongly](https://en.wikipedia.org/wiki/Strong_and_weak_typing) typed.
-It means that at compile time,
-Swift ensures that each variable (or constant) is unambiguously associated with a single type,
-and that each operation on that variable (or constant) is well defined for that type.
-
 ## Constants and Variables
 
-Variables are declared with the keyword `var`:
+The Swift programming language distinguishes
+[variables](https://en.wikipedia.org/wiki/Variable_(computer_science)) and
+[constants](https://en.wikipedia.org/wiki/Constant_(computer_programming)).
+
+Both are an association between a name and a value.
+Variables can have their value modified, whereas constants cannot.
+
+Variables are declared with the keyword `var`.
+They can be affected a new value using the `=` operator.
 
 ```swift
-var someVariable = 54
-
-someVariable = 42
-
-someVariable = "10"
-// Error: Cannot assign value of type "String" to type "Int"
+var pokemonLevel = 1
+pokemonLevel = 2
 ```
 
 Constants are declared with the keyword `let`.
-Unlike variables, it is not possible to assign a value to a constant after it has been initialized:
+Unlike variables, it is not possible to assign a value to a constant after its initialization:
 
 ```swift
-let someConstant = 54
-
-someConstant = 42
-// Error: Immutable value 'someConstant' may only be initialized once
+let pokemonSpecie = "Bulbasaur"
+pokemonSpecie = "Pikachu"
+// error: cannot assign to value: 'pokemonSpecie' is a 'let' constant
 ```
 
 The value of variable and constants can be printed with the built-in function `print(_:)`:
 
 ```swift
-var someVariable = 42
-print(someVariable)
-// Prints 42
+var pokemonLevel = 1
+print(pokemonLevel)
+// 1
 ```
 
 > We'll discuss functions (and methods) with their syntax and semantics at length later in this tutorial.
 > For the time being, just use them as presented in the examples.
 
-Values can be included in strings by wrapping them in parentheses, and adding a backslash (`\`) before the first one:
+Values can be included in strings by wrapping them in within `\()`:
 
 ```swift
-print("The variable is equal to \(someVariable).")
-// Prints "The variable is equal to 42."
+print("The level of my Pokemon is \(pokemonLevel).")
+// The level of my Pokemon is 1.
 ```
+
+From now on, we will talk about variables and constants under the denomination of "variables".
 
 ## Types
 
-We said earlier that Swift is strongly typed, and that each variable (or constant) is always associated with a type.
-In the above example, the typing had been made transparent,
-thanks to Swift's type inference engine, which we'll talk about it later.
-It is however possible (and sometimes necessary) to explicitly specify the type of a variable or constant with what is called *type annotations*.
-In the example below, the variable `someNumber` is explicitly typed with `Double` (for double precision floating point number),
-which tells Swift that it should consider it an `Double` value:
+The previous examples do not specify information what can be stored in a variable or constant,
+but the Swift compiler prevents putting arbitrary values in variables or constants.
+For instance, it is impossible to put a floating point number into a variable that has been initialized with an integer:
 
 ```swift
-let someNumber: Double = 42
+var pokemonLevel = 1
+pokemonLevel = 2.3
+// error: cannot assign value of type 'Double' to type 'Int'
 ```
 
+Swift is [strongly typed](https://en.wikipedia.org/wiki/Strong_and_weak_typing).
+Every variable is given a unique [type](https://en.wikipedia.org/wiki/Type_system),
+and can only store values that correspond to this type.
+Weakly typed languages do not have this restriction.
+Static typing also helps to ensure [type safety](https://en.wikipedia.org/wiki/Type_safety),
+that prevents bugs in programs.
+
+Type correctness is checked by the Swift compiler.
+Swift ensures that each variable is unambiguously associated with a single type,
+and that each operation on that variable is well defined for that type.
+The language is thus said [statically typed](https://en.wikipedia.org/wiki/Type_system#STATIC).
+On the contrary, a dynamically typed language performs type checking at runtime,
+during the program execution.
+Static typing also helps to ensure [type safety](https://en.wikipedia.org/wiki/Type_safety).
+
+The type of a variable may not be explicit, but it always exists.
+Swift provides [type inference](https://en.wikipedia.org/wiki/Type_inference).
+If the compiler can infer the type of a variable (or constant) using its initialization,
+it automatically associates this type with the variable.
+
+It is sometimes necessary to explicitly specify the type of a variable, with what is called *type annotations*.
+In the example below, the variable `pokemonWeight` is explicitly typed with `Double` (for double precision floating point number),
+which tells Swift that it should consider it as a `Double` value:
+
+```swift
+let pokemonWeight: Double = 5.1
+```
+
+<!-- Numeric types are often not precise enough.
+Is the weight of my Pokemon expressed in kilograms, or in pounds?
+More precise types exist to provide the [units of measurement](https://en.wikipedia.org/wiki/Units_of_measurement).
+```Swift
+import Foundation
+let pokemonWeight = Measurement(value: 5.1, unit: UnitMass.kilograms)
+``` -->
+
+
 It is possible to declare multiple variables of the same type on a single line.
-Note that this should be done sparingly and **only when the variables are clearly related**:
 
 ```swift
 let x, y: Int
 ```
 
+> 👎🏻 Note that this should be done sparingly and **only when the variables are clearly related**:
+
 The type of an expression can be retrieved with the built-in function `type(of:)`:
 
 ```swift
-print(type(of: 42))
-// Prints "Int"
-print(type(of: "Hello"))
-// Prints "String"
+let pokemonWeight: Double = 5.1
+print(type(of: pokemonWeight))
+// Double
+print(type(of: "Pikachu"))
+// String
 ```
 
-Types are first-class citizen,
-meaning that they can be assigned to variables (or constants),
-like any other value:
+Types are first-class citizen in Swift.
+It means that they are also considered as values.
+They can be assigned to variables (or constants), like any other value,
+and can also be passed as parameters to the `print(_:)` or `type(of:)` functions.
 
 ```swift
-let someType = type(of: "Hello")
-print(someType)
-// Prints "String"
+let t1 = type(of: "Pikachu")
+print(t1)
+// String
+let t2 = type(of: t1)
+print(t2)
+// String.Type
+let t3 = type(of: t2)
+print(t3)
+// String.Type.Type
 ```
+
+First-class types are complex.
+They are covered in other parts of this tutorial.
 
 ## Optionals
 
-One interesting feature of Swift is its optional types.
-An optional denotes a value that may be present or not.
-Any type suffixed with the operator `?` is an optional type,
-in which the original type has been *wrapped*:
+Swift requires to initialize all variables (or constants) with a value,
+because it does not allow them to be `nil` by default.
+Allowing everywhere the [null pointer](https://en.wikipedia.org/wiki/Null_pointer) is a bad programming practice,
+as it creates easily errors.
 
-```swift
-var x: Int?
-print(x)
-// Prints "nil"
-```
+Instead, Swift provide optional types to explicitly state what can be null.
+An [optional type](https://en.wikipedia.org/wiki/Option_type) denotes a value that may be present or not.
+It is specified by appending the operator `?` to any type.
+The original type is *wrapped* with the possibility of the `nil` value:
 
-In the above example, since no value is provided for `x`,
-Swift automatically assigns it to the special value `nil` that denotes the *absence* of a value.
-
+In the following example, since no value is provided for `x`,
+the language automatically creates an initialization with the special `nil` value,
+that denotes the *absence* of a value.
+It is also possible to assign `nil` manually.
 Values can be assigned to optionals the same way they would have been assigned to the original type.
-It is also possible to assign `nil` manually:
 
 ```swift
-var x: Int? = 42
-print(x)
-// Prints "Optional(42)"
+var trainer1: String?
+// trainer1: String? = nil
+var trainer2: String? = nil
+// trainer2: String? = nil
+var trainer3: String? = "Ash"
+// trainer3: String? = "Ash"
 ```
 
-As Swift emphasize on [type safety](type safety unchecked cast from object to),
-accessing the value of an optional is a bit different than for non-optionals.
-If we simply assign the value of an optional type to another variable,
-that variable should also be an optional (otherwise the type checker will complain about it).
-By suffixing an optional value with the operator `!`,
-Swift will return the wrapped value if it exists,
-or will throw an error at runtime if the optional value was `nil`,
-This process is called *forced-unwrapping*:
+Optional types take part in [type safety](https://en.wikipedia.org/wiki/Type_safety).
+Their use is not transparent to the programmer: it differs from non-optionals.
+Assignment to another variable requires that the other variable is also an optional.
 
 ```swift
-var x: Int? = 42
-let y = x
-print(y)
-// Prints "Optional(42)"
-
-let z = x!
-print(z)
-// Prints "42"
+var trainer1: String? = "Ash"
+// trainer1: String? = nil
+var trainer2: String = trainer1
+// error: value of optional type 'String?' not unwrapped; did you mean to use '!' or '?'?
+var trainer3 = trainer1
+// trainer3: String? = "Ash"
 ```
 
-> Note that the above program will be compiled with a warning about the implicit coercion from `Int?` to `Any`.
+Any optional can be converted to a non-optional value using the `!` operator.
+Swift returns the wrapped value if it exists,
+or throws an error at runtime if the optional value is `nil`.
+This operation is called *forced-unwrapping*:
+
+```swift
+var trainer1: String? = "Ash"
+// trainer1: String? = "Ash"
+var trainer2: String = trainer1!
+// trainer2: String = "Ash"
+trainer1 = nil
+trainer2 = trainer1!
+// fatal error: unexpectedly found nil while unwrapping an Optional value
+```
+
+> 👎 You should never force-unwrap an optional unless your algorithm makes sure it will be assigned to a value before you do it.
+> We'll see a way to do that later.
+
+Another (less common) way to define optionals is to suffix the wrapped type with the operator `!`.
+Such optionals are said to be *implicitly unwrapped*.
+They avoid the need to append the `!` to get the unwrapped value.
+
+```swift
+var trainer: String
+let possibleTrainer: String? = "Ash"
+trainer = possibleTrainer! // the ! is required
+let assumedTrainer: String! = "Ash"
+trainer = assumedTrainer // no need for !
+```
+
+> The following program compiles with a warning about the implicit coercion from `String?` to `Any`.
 > You can safely ignore this warning for the time being.
 > We'll see how to circumvent it later.
 
-> You should never force-unwrap an optional unless your algorithm makes sure it will be assigned to a value before you do it.
-> We'll see a way to do that later.
-
-Another less common way to define optionals is to suffix the wrapped type with the operator `!`.
-Such optional is said to be *implicitly unwrapped*,
-and avoid the need to append the `!` to get the wrapped value.
-
 ```swift
-var value: String
-
-let possibleValue: String? = "An optional string."
-value = possibleValue! // the ! is required
-
-let assumedValue: String! = "An implicitly unwrapped optional string."
-value = assumedValue // no need for !
+var trainer1: String? = "Ash"
+print (trainer1)
 ```
 
 ## Tuples
