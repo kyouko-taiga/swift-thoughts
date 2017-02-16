@@ -584,101 +584,114 @@ species
 
 ## Sets
 
-Like an array, a set is a collection of values of homogeneous type.
-However, unlike arrays, they are not ordered, and can contain at most one instance of each value.
-Swift doesn't have a dedicated syntax for sets.
-Instead, one should explicitly type set variables (or constants):
+A set is a collection of values of homogeneous type.
+Unlike arrays, sets are not ordered, and can contain at most one instance of each value.
+Swift does not provide a dedicated syntax for sets:
+they are written as arrays and explicitly typed as sets.
 
 ```swift
 let speciesNames: Set = ["Bulbasaur", "Charmander", "Squirtle"]
 ```
 
-> Notice that the only difference with The syntax to declare array is the explicit typing `: Set`.
+> Notice that the only difference with the syntax to declare an array is the explicit typing `: Set`.
 > Behind the scenes, the type `Set` is defined so that it can be initialized with the same syntax as arrays.
 > This process is called *literal initialization*.
-> The explicit typing allows Swift to know it should use the initializer of `Set` rather than that of `Array`.
+> The explicit typing allows Swift to know that it must use the initializer of `Set` rather than that of `Array`.
 
-Should the set be declared before initialized (or initialized empty),
-the type of its values should also be defined explicitly:
+If the set is declared before its initialization, or is initially empty,
+the type of its values must also be defined explicitly.
+The syntax is similar to the one used for arrays:
 
 ```swift
+let speciesNames : Set<String> = []
 let speciesNames = Set<String>()
 ```
 
-> Notice that if we were to write `Set<Species>`,
-> the compiler would complain about the `Species` type not conforming to the `Hashable` protocol.
-> This is because the elements of a set must have some properties that our type `Species` doesn't have.
-> We'll see later how we can extend a type so it respects these kind of properties.
+> Notice that if we write `Set<Specie>`,
+> the compiler would complain about the `Specie` type not conforming to the `Hashable` protocol.
+> This is because the elements of a set must have some properties that our type `Specie` doesn't have.
+> We'll see later how we can extend a type to make it respect such properties.
 
-As arrays, sets are mutable if declared with `var`.
-Inserting a value in the set can be done with the `Set.insert(_:)` function:
+As arrays, sets are immutable if declared with `let`, and mutable if declared with `var`.
+They also define similar `Set.insert(_:)` and `Set.remove(_:)` functions,
+and the `count` property.
+A call to `remove(_:)` does not change anything if the value does not belong to the set.
 
 ```swift
 var speciesNames: Set = ["Bulbasaur", "Charmander", "Squirtle"]
 speciesNames.insert("Pidgey")
-print(speciesNames.count)
-// Prints 4
+speciesNames.count
+// $R0: Int = 4
+speciesNames.remove("Pidgey")
+speciesNames.count
+// $R0: Int = 3
 ```
 
 > ❔
 >
-> What would `print(speciesNames.count)` print if we had inserted `"Bulbasaur"` rather than `"Pidgey"`?
-
-Removing a value can be done with the `Set.remove(_:)` function:
-
-```swift
-speciesNames.remove("Pidgey")
-print(speciesNames.count)
-// Prints 3
-```
-
-> Note that `remove(_:)` doesn't do anything if the value wasn't in the set before calling it.
+> What does `speciesNames.count` return if we insert `"Bulbasaur"` in the previous set?
 
 ## Dictionaries
 
-A dictionary is an unordered collection of tuples `(K, V)`,
-where `K` is the type of its keys and `V` the type of its values.
-Like in a set, an instance of a key may not appear more once in a dictionary.
-A same value can however be associated multiple times.
-Dictionaries are with a comma-separated list of of pairs `k: v`,
-where `k` is a key of type `K` and `v` its associated value of type `V`:
+A dictionary is a mapping from keys to values.
+Each key is associated with exactly one value or nothing.
+Like a set, a key cannot appear more than once in a dictionary.
+A same value can however be associated with multiple keys.
+Dictionaries are written as a comma-separated list of key-value pairs `k: v`,
+where `k` is a key and `v` its associated value:
 
 ```swift
-let speciesTypes = ["Bulbasaur": SpeciesType.grass, "Charmander": SpeciesType.fire]
+enum Element { case grass, fire, water }
+let speciesElements = ["Bulbasaur": Element.grass, "Charmander": Element.fire]
 ```
 
-Should the dictionary be declared before initialized (or initialized empty), the types of its keys and values should also be defined explicitly:
+If the dictionary is declared before its initialization, or is initially empty,
+the type of its keys and values must be defined explicitly.
+The syntax is similar to the one used for arrays and sets:
 
 ```swift
-let speciesTypes = [String: SpeciesType]()
+let speciesElements : [String: SpeciesType] = []
+let speciesElements = [String: SpeciesType]()
 ```
 
 Dictionaries are indexed by their keys.
-Their values can be accessed by subscripting the dictionary (i.e. using the square brackets `[]`) with the desired key.
+This differs from arrays that are indexed by integers.
+The values of a dictionary can be accessed by subscripting the dictionary,
+using the square brackets `[]`, with the desired key.
 
 ```swift
-let speciesTypes = ["Bulbasaur": SpeciesType.grass, "Charmander": SpeciesType.fire]
-print(speciesTypes["Bulbasaur"]!)
-// Prints "grass"
+enum Element { case grass, fire, water }
+let speciesTypes = ["Bulbasaur": Element.grass, "Charmander": Element.fire]
+speciesTypes["Bulbasaur"]
+// $R0: Element? = grass
 ```
 
-Notice the suffix operator `!` after `speciesTypes["Bulbasaur"]`.
-This is because the returned values of dictionary subscripts is an optional (i.e. if the type of its keys is `K`, the return type of its subscript is `K?`).
-Hence, if there's no value associated with the given key, the dictionary returns `nil`.
-
-As arrays, dictionaries are mutable if declared with `var`.
-Inserting (or modifying) an entry association in a dictionary can be performed with its subscript:
+Notice that the result is an optional.
+The values returned by dictionary subscripts are optionals,
+because the `nil` value is returned if the key does not exist.
+This behavior differs from arrays, that raise an error in case of access outside the indices.
+If the programmer knows that the key exists, the `!` operator can be used to get a non-optional value:
 
 ```swift
-var speciesTypes = ["Bulbasaur": "Grass", "Charmander": "Fire"]
+speciesTypes["Bulbasaur"]!
+// $R0: Element = grass
+```
+
+As arrays and sets, dictionaries are mutable if declared with `var` and constants if declared with `let`.
+Modification of the value associated to a key is similar to arrays and sets:
+
+```swift
+enum Element { case grass, fire, water }
+let speciesTypes = ["Bulbasaur": Element.grass, "Charmander": Element.fire]
+speciesTypes["Bulbasaur"] = .water
+```
+
+Insertion and deletion differ from arrays and sets, as they are possible using subscripts:
+
+```swift
+enum Element { case grass, fire, water }
+let speciesTypes = ["Bulbasaur": Element.grass, "Charmander": Element.fire]
 speciesTypes["Oddish"] = .grass
-print(speciesTypes["Oddish"]!)
-// Prints "Grass"
-```
-
-Removing an entry from a dictionary boils down to setting `nil` for the desired key:
-
-```swift
 speciesTypes["Charmander"] = nil
 ```
 
