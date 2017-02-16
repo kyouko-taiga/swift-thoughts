@@ -17,7 +17,7 @@ pokemonLevel = 2
 ```
 
 Constants are declared with the keyword `let`.
-Unlike variables, it is not possible to assign a value to a constant after its initialization:
+Unlike variables, it is not possible to assign a value to a constant after its initialization.
 
 ```swift
 let pokemonSpecie = "Bulbasaur"
@@ -83,6 +83,15 @@ which tells Swift that it should consider it as a `Double` value:
 
 ```swift
 let pokemonWeight: Double = 5.1
+```
+
+Using type annotations, it is possible to declare a constant and initialize it later.
+This feature is not available in the REPL, but available in compiled code:
+
+```swift
+let pokemonWeight: Double
+pokemonWeight = 5.1
+// error: variables currently must have an initial value when entered at the top level of the REPL
 ```
 
 <!-- Numeric types are often not precise enough.
@@ -390,12 +399,15 @@ such as [lists](https://en.wikipedia.org/wiki/List_(abstract_data_type)) or [tre
 A recursive enumeration must be prefixed with the keyword `indirect`:
 
 ```swift
-indirect enum Tree {
+indirect enum BinaryTree {
   case leaf
-  case node([Tree])
+  case node(BinaryTree, BinaryTree)
 }
-let aTree : Tree = .node([.leaf, .node([]), .leaf])
+let aTree : BinaryTree = .node(.leaf, .node(.leaf, .leaf))
 ```
+
+> **Warning:** there is currently a bug with indirect enumerations in the REPL, but not in the Swift compiler.
+> [This bug](https://bugs.swift.org/browse/SR-3972) causes an infinite recursion where there should not be.
 
 Enumerations are a powerful tool in Swift, and there is much more to talk about.
 More detailed information and examples are available in
@@ -403,93 +415,172 @@ More detailed information and examples are available in
 
 ## Arrays
 
-An array is a collection of values of homogeneous type (e.g. a collection of `String` values).
-They are declared with square brackets `[]`:
+An array is a sequence of values of homogeneous type (e.g. a collection of `String` values).
+Arrays are declared with square brackets `[]`:
 
 ```swift
 let species = [(001, "Bulbasaur"), (004, "Charmander"), (007, "Squirtle")]
 ```
 
-Thanks to Swift's type inference, the type of the above array hasn't to be explicitly defined.
-However, if the values of the array weren't known when defining the constant,
-it would have been necessary to explicitly type it as there wouldn't have been any way to infer the type of the array.
+Type inference considers this array as an array of tuples `(Int, String)`,
+as we have put values of such tuples within.
+It also handles tuples with named fields, for instance:
 
 ```swift
-let species: [Species]
-species = [(001, "Bulbasaur"), (004, "Charmander"), (007, "Squirtle")]
+let species = [(id: 001, name: "Bulbasaur"), (id: 004, name: "Charmander"), (id: 007, name:"Squirtle")]
 ```
 
-To type an array **and** initialize it as empty, one can use the following syntax:
+If the values of an array are not given on initialization,
+or if the array is initially empty,
+it is necessary to explicitly type the array.
+This behavior is similar to the declaration of any variable,
+and more precisely similar to how optionals work.
 
 ```swift
-let species = [Species]()
+let species = []
+// error: empty collection literal requires an explicit type
+typealias Specie = (id: Int, name: String)
+let species: [Specie] // not working in the REPL only
+species = [(id: 001, name: "Bulbasaur"), (id: 004, name: "Charmander"), (id: 007, name:"Squirtle")]
+```
+
+An empty array can be initialized with explicit type annotation using the following syntax:
+
+```swift
+typealias Specie = (id: Int, name: String)
+let species = [Specie]()
 ```
 
 > Behind the scene, the above line calls an initializer of the Array<String> type,
-which builds an empty array of Pokemon.
-> Then, Swift is able to infer the type of the rvalue and types the lvalue accordingly.
+> which builds an empty array of Pokemon.
+> Then, the type inference is able to determine the type of the expression and thus the type of the variable.
 
-Arrays are indexed by `Int` values, starting at 0.
+Arrays are sequences: they are indexed by `Int` values, starting at 0.
 Their values can be accessed by subscripting the array (i.e. using the square brackets `[]`) with the desired index.
 Using a negative number or an index equal to or greater than the size of the array will trigger a runtime error:
 
 ```swift
-let species = [(001, "Bulbasaur"), (004, "Charmander"), (007, "Squirtle")]
-print(species[1])
-// Prints "(4, "Charmander")"
-
-print(species[3])
-// Error: EXC_BAD_INSTRUCTION
+let species = [(id: 001, name: "Bulbasaur"), (id: 004, name: "Charmander"), (id: 007, name: "Squirtle")]
+species[1].name
+// $R0: String = "Charmander"
+species[3].name
+// fatal error: Index out of range
 ```
 
-Slices of an array can be accessed by using a range rather than an `Int` value as the index of the subscript:
+Slices are subparts of an array. They are themselves considered as arrays.
+They can be accessed using a range rather than an `Int` value as the index of the subscript:
 
 ```swift
-print(species[0 ... 1])
-// Prints "[(1, "Bulbasaur"), (4, "Charmander")]"
+species[0 ... 1]
+// $R1: ArraySlice<(id: Int, name: String)> = 2 values {
+//   [0] = {
+//     id = 1
+//     name = "Bulbasaur"
+//   }
+//   [1] = {
+//     id = 4
+//     name = "Charmander"
+//   }
+// }
+species[0 ... 1][0].name
+// $R2: String = "Bulbasaur"
 ```
+
+The number of elements in an array is obtained by its `count` property:
+
+```swift
+species.count
+// $R6: Int = 3
+```
+
+> Trying to access or modify a value for an index that is outside of an array’s existing bounds will trigger a runtime error.
+> Except when the array is empty, its valid indices are always comprised between 0 and the its number of elements (its `count` property) - 1.
 
 Notice that in all the examples above, the `species` array was declared as a constant (using the keyword `let`).
-As a result, it becomes an immutable collection.
-It is neither possible to add (or remove) values to it, nor to change the value at a given index:
+As a result, it is an immutable collection.
+It is impossible to add or remove values to it, or to change the value at a given index:
 
 ```swift
-let species = [(001, "Bulbasaur"), (004, "Charmander"), (007, "Squirtle")]
-species[0] = (025, "Pikachu")
-// Error: Immutable value 'species' may not be assigned to
+let species = [(id: 001, name: "Bulbasaur"), (id: 004, name: "Charmander"), (id: 007, name: "Squirtle")]
+species[0] = (id: 025, name: "Pikachu")
+// error: cannot assign through subscript: 'species' is a 'let' constant
 ```
 
 Mutable arrays have to be declared with the `var` keyword:
 
 ```swift
-var species = [(001, "Bulbasaur"), (004, "Charmander"), (007, "Squirtle")]
-species[0] = (025, "Pikachu")
-print(species[0])
-// Prints "(025, "Pikachu")"
-
-species[1 ... 2] = [(043, "Oddish"), (016, "Pidgey")]
-print(species)
-// Prints "[(25, "Pikachu"), (43, "Oddish"), (16, "Pidgey")]"
+var species = [(id: 001, name: "Bulbasaur"), (id: 004, name: "Charmander"), (id: 007, name: "Squirtle")]
+species[3] = (id: 025, name: "Pikachu")
+species[3].name
+// $R0: String = "Pikachu"
+species[1 ... 2] = [(id: 043, name: "Oddish"), (id: 016, name: "Pidgey")]
+species
+// $R1: [(id: Int, name: String)] = 3 values {
+//   [0] = {
+//     id = 25
+//     name = "Pikachu"
+//   }
+//   [1] = {
+//     id = 43
+//     name = "Oddish"
+//   }
+//   [2] = {
+//     id = 16
+//     name = "Pidgey"
+//   }
+// }
 ```
 
-Inserting a new value in an array can be performed with the `Array.insert(_:at:)` function:
+Inserting a new value in an array is not possible to use the subscript assignment.
+Instead, the programmer must use the `Array.insert(_:at:)` function.
+It inserts a new element at the position `at` and moves all remaining elements one index after:
 
 ```swift
-species.insert((043, "Oddish"), at: 0)
-print(species)
-// Prints "[(43, "Oddish"), (25, "Pikachu"), (43, "Oddish"), (16, "Pidgey")]"
+species[3] = (id: 025, name: "Pikachu")
+// fatal error: Index out of range
+species.insert((id: 043, name: "Oddish"), at: 0)
+species
+// $R1: [(id: Int, name: String)] = 4 values {
+//   [0] = {
+//     id = 43
+//     name = "Oddish"
+//   }
+//   [1] = {
+//     id = 25
+//     name = "Pikachu"
+//   }
+//   [2] = {
+//     id = 43
+//     name = "Oddish"
+//   }
+//   [3] = {
+//     id = 16
+//     name = "Pidgey"
+//   }
+// }
 ```
 
-Similarly, removing a value can be performed with the `Array.remove(at:)` function:
+Similarly, removing a value is performed with the `Array.remove(at:)` function.
+It removes the element at index `at` and moves all remaining elemennts one index before:
 
 ```swift
 species.remove(at: 1)
-print(species)
-// Prints "[(43, "Oddish"), (43, "Oddish"), (16, "Pidgey")]"
+species
+// $R1: [(id: Int, name: String)] = 3 values {
+//   [0] = {
+//     id = 43
+//     name = "Oddish"
+//   }
+//   [1] = {
+//     id = 43
+//     name = "Oddish"
+//   }
+//   [2] = {
+//     id = 16
+//     name = "Pidgey"
+//   }
+// }
 ```
-
-> Trying to access or modify a value for an index that is outside of an array’s existing bounds will trigger a runtime error.
-> Except when the array is empty, its valid indices are always comprised between 0 and the its number of elements (its `count` property) - 1.
 
 ## Sets
 
