@@ -2,7 +2,6 @@
 
 Swift uses `if`, `switch` or `guard` to make conditional statements,
 and `for-in`, `while` or `repeat-while` to make loops.
-Parentheses around the conditions are optional (and shouldn't be used unless they make the code clearer).
 
 ## `if` statements
 
@@ -17,6 +16,8 @@ if pokemonLevel > 30 {
   print("the Pokemon will obey")
 }
 ```
+
+Parentheses around the conditions are optional (and shouldn't be used unless they make the code clearer).
 
 > Unlike in most languages of the C-family, Swift conditions **must** be a Boolean expression (i.e. of type `Bool`).
 > As a result, `if pokemonLevel { ... }` wouldn't be a valid expression in the above example, and the compiler would complain about it.

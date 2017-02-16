@@ -580,6 +580,104 @@ Well, actually they don't have to, precisely because the closure **captured** th
 In other words, the closure keeps a reference to the objects it captures until it is itself destroyed.
 This behavior has some shortcomings that we'll discuss later.
 
+## Error Handling
+
+Sometimes, returning an optional type to denote the success or failure of a function is not enough.
+Indeed, it some situations it might be desirable for the caller to know exactly what is the cause the failure,
+so that it can take the appropriate action to recover from the error.
+Swift handles this kind of errors via a mechanism of exception.
+
+Errors can represented by types that conform to the `Error` protocol.
+We'll see in details what *conforming to a protocol* means,
+but for the time being, we'll just consider this syntax:
+
+```swift
+enum PokemonError: Error {
+  case outOfBoundsLevel
+  case unknownSpeciesNumber(number: Int)
+}
+```
+
+The above enumeration groups two custom errors,
+respectively representing an invalid Pokemon level, and an unknown species number.
+When a program reaches a state that should be considered an error,
+it can throw an error type:
+
+```swift
+throw PokemonError.outOfBoundsLevel
+```
+
+Unlike in some other languages,
+Swift doesn't allow errors to propagate implicitly.
+As a result, functions that may throw an error should be marked with the keyword `throws`:
+
+```swift
+struct Pokemon { /* ... */ }
+
+func incrementingLevel(of pokemon: Pokemon) throws -> Pokemon {
+  guard pokemon.level < 100 else {
+    throw PokemonError.outOfBoundsLevel
+  }
+
+  return Pokemon(species: pokemon.species, level: pokemon.level + 1)
+}
+```
+
+Incidentally,
+pieces of code that may throw an error must explicitly define how possible errors will be handled:
+
+```swift
+var rainer = Pokemon(species: (number: 134, name: "Vaporeon"), level: 100)
+
+do {
+  try rainer = incrementingLevel(of: rainer)
+} catch PokemonError.outOfBoundsLevel {
+  print("rainer already reached level 100")
+} catch PokemonError.unknownSpeciesNumber(number: let number) {
+  print("cannot raise the level of an unknown species: \(number)")
+}
+// Prints "rainer already reached level 100"
+```
+
+> Notice how a `do-catch` block can use pattern matching on the thrown error.
+
+A `do-catch` block doesn't have to catch all possible errors.
+Remaining cases will be propagated to the enclosing scope.
+However, the latter will have to finish the job,
+unless it is a function marked with `throws`.
+
+It is possible to use `try?` to convert a the result of a function marked with `throws` into an optional value.
+If the function throws an error upon calling, the error will be handled as a `nil` return value:
+
+```swift
+var strongerRainer = try? incrementingLevel(of: rainer)
+print(strongerRainer)
+// Prints "nil"
+```
+
+If a function may throw an error,
+but requires some cleanup to be done before it transfers control,
+it is possible to mark a piece of code as deferred.
+Doing so will ensure that the cleanup code is executed when the scope it is defined in is exited,
+either following a `return` statement, or because of a thrown error:
+
+```swift
+func readPokemonName(from filename: String) throws {
+  let file = open(filename)
+  defer {
+    close(file)
+  }
+
+  // This statement may throw.
+  return try readline(from: file)
+}
+
+```
+
+> Note the the function `open(_:)`, `close(_:)` and `readling(from:)` doesn't exist.
+> Reading a file in Swift involves the Foundation library,
+> and a slightly more complicated syntax that would hinder the clarity of that example.
+
 ## Exercise
 
 Implement a function `curry(_:)` that accepts a function with 2 parameters and 1 return value, to return a function with exactly 1 parameter and 1 return value, which also is a function with exactly 1 parameter and 1 return value.
