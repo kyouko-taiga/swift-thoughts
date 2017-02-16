@@ -20,9 +20,9 @@ Constants are declared with the keyword `let`.
 Unlike variables, it is not possible to assign a value to a constant after its initialization.
 
 ```swift
-let pokemonSpecie = "Bulbasaur"
-pokemonSpecie = "Pikachu"
-// error: cannot assign to value: 'pokemonSpecie' is a 'let' constant
+let pokemonSpecies = "Bulbasaur"
+pokemonSpecies = "Pikachu"
+// error: cannot assign to value: 'pokemonSpecies' is a 'let' constant
 ```
 
 The value of variable and constants can be printed with the built-in function `print(_:)`:
@@ -269,8 +269,8 @@ As a result, they can be accessed using their labels rather than their position 
 However, positional access is still possible, as Swift stores both the position and the label for tuples:
 
 ```swift
-let bulbasaur = (id: 001, name: "Bulbasaur")
-// bulbasaur: (id: Int, name: String) = {
+let bulbasaur = (number: 001, name: "Bulbasaur")
+// bulbasaur: (number: Int, name: String) = {
 //   id = 1
 //   name = "Bulbasaur"
 // }
@@ -286,7 +286,7 @@ Another way to retrieve the values of a tuple is to assign them to new variables
 This process is called *decomposition*:
 
 ```swift
-let bulbasaur = (id: 001, name: "Bulbasaur")
+let bulbasaur = (number: 001, name: "Bulbasaur")
 let (pokemonId, pokemonName) = bulbasaur
 // pokemonId: Int = 1
 // pokemonName: String = "Bulbasaur"
@@ -295,7 +295,7 @@ let (pokemonId, pokemonName) = bulbasaur
 If some values aren't needed, they can be explicitly ignored by using `_` when decomposing the tuple:
 
 ```swift
-let bulbasaur = (id: 001, name: "Bulbasaur")
+let bulbasaur = (number: 001, name: "Bulbasaur")
 let (_, pokemonName) = pokemon
 // pokemonName: String = "Bulbasaur"
 ```
@@ -311,11 +311,11 @@ In order to avoid writing several times the same type (at different places in th
 it is possible to create type aliases:
 
 ```swift
-typealias Specie = (id: Int, name: String)
-let bulbasaur: Specie = (001, "Bulbasaur")
-let ivysaur  : Specie = (id: 002, name: "Ivysaur")
+typealias Species = (number: Int, name: String)
+let bulbasaur: Species = (001, "Bulbasaur")
+let ivysaur  : Species = (number: 002, name: "Ivysaur")
 ```
-<!-- let venusaur : Specie = (name: "Venusaur", id: 003) -->
+<!-- let venusaur : Species = (name: "Venusaur", number: 003) -->
 
 > Notice that we can omit the labels when initializing the `bulbasaur` constant.
 > This is possible only if the values are in the same order as in the tuple definition.
@@ -336,7 +336,7 @@ An enumeration type is declared using the keyword `enum`,
 and its different values with the keyword `case`:
 
 ```swift
-enum Element {
+enum SpeciesType {
   case grass
   case fire
   case water
@@ -346,7 +346,7 @@ enum Element {
 It is also possible to declare the cases of an enumeration on a single line:
 
 ```swift
-enum Element {
+enum SpeciesType {
   case grass, fire, water
 }
 ```
@@ -360,17 +360,17 @@ A variable of an enumeration type can only be of *one* of the enumeration cases.
 Assignment is written using the qualified name of the case:
 
 ```swift
-let bulbasaurElement = Element.grass
-// bulbasaurElement: Element = grass
+let bulbasaurSpeciesType = SpeciesType.grass
+// bulbasaurSpeciesType: SpeciesType = grass
 ```
 
 If the type of the variable (or constant) is explicitly defined or has already been inferred,
 it is possible (and preferred) to omit the name of the enumeration:
 
 ```swift
-let bulbasaurElement: Element
-bulbasaurElement = .grass
-// bulbasaurElement: Element = grass
+let bulbasaurSpeciesType: SpeciesType
+bulbasaurSpeciesType = .grass
+// bulbasaurSpeciesType: SpeciesType = grass
 ```
 
 Enumeration cases can store *associated values*.
@@ -415,7 +415,7 @@ More detailed information and examples are available in
 
 ## Arrays
 
-An array is a sequence of values of homogeneous type (e.g. a collection of `String` values).
+An array is a [sequence](https://en.wikipedia.org/wiki/Sequence) of values of homogeneous type (e.g. a collection of `String` values).
 Arrays are declared with square brackets `[]`:
 
 ```swift
@@ -427,7 +427,7 @@ as we have put values of such tuples within.
 It also handles tuples with named fields, for instance:
 
 ```swift
-let species = [(id: 001, name: "Bulbasaur"), (id: 004, name: "Charmander"), (id: 007, name:"Squirtle")]
+let species = [(number: 001, name: "Bulbasaur"), (number: 004, name: "Charmander"), (number: 007, name:"Squirtle")]
 ```
 
 If the values of an array are not given on initialization,
@@ -439,16 +439,16 @@ and more precisely similar to how optionals work.
 ```swift
 let species = []
 // error: empty collection literal requires an explicit type
-typealias Specie = (id: Int, name: String)
-let species: [Specie] // not working in the REPL only
-species = [(id: 001, name: "Bulbasaur"), (id: 004, name: "Charmander"), (id: 007, name:"Squirtle")]
+typealias Species = (number: Int, name: String)
+let species: [Species] // not working in the REPL only
+species = [(number: 001, name: "Bulbasaur"), (number: 004, name: "Charmander"), (number: 007, name:"Squirtle")]
 ```
 
 An empty array can be initialized with explicit type annotation using the following syntax:
 
 ```swift
-typealias Specie = (id: Int, name: String)
-let species = [Specie]()
+typealias Species = (number: Int, name: String)
+let species = [Species]()
 ```
 
 > Behind the scene, the above line calls an initializer of the Array<String> type,
@@ -460,7 +460,7 @@ Their values can be accessed by subscripting the array (i.e. using the square br
 Using a negative number or an index equal to or greater than the size of the array will trigger a runtime error:
 
 ```swift
-let species = [(id: 001, name: "Bulbasaur"), (id: 004, name: "Charmander"), (id: 007, name: "Squirtle")]
+let species = [(number: 001, name: "Bulbasaur"), (number: 004, name: "Charmander"), (number: 007, name: "Squirtle")]
 species[1].name
 // $R0: String = "Charmander"
 species[3].name
@@ -472,7 +472,7 @@ They can be accessed using a range rather than an `Int` value as the index of th
 
 ```swift
 species[0 ... 1]
-// $R1: ArraySlice<(id: Int, name: String)> = 2 values {
+// $R1: ArraySlice<(number: Int, name: String)> = 2 values {
 //   [0] = {
 //     id = 1
 //     name = "Bulbasaur"
@@ -501,21 +501,21 @@ As a result, it is an immutable collection.
 It is impossible to add or remove values to it, or to change the value at a given index:
 
 ```swift
-let species = [(id: 001, name: "Bulbasaur"), (id: 004, name: "Charmander"), (id: 007, name: "Squirtle")]
-species[0] = (id: 025, name: "Pikachu")
+let species = [(number: 001, name: "Bulbasaur"), (number: 004, name: "Charmander"), (number: 007, name: "Squirtle")]
+species[0] = (number: 025, name: "Pikachu")
 // error: cannot assign through subscript: 'species' is a 'let' constant
 ```
 
 Mutable arrays have to be declared with the `var` keyword:
 
 ```swift
-var species = [(id: 001, name: "Bulbasaur"), (id: 004, name: "Charmander"), (id: 007, name: "Squirtle")]
-species[3] = (id: 025, name: "Pikachu")
+var species = [(number: 001, name: "Bulbasaur"), (number: 004, name: "Charmander"), (number: 007, name: "Squirtle")]
+species[3] = (number: 025, name: "Pikachu")
 species[3].name
 // $R0: String = "Pikachu"
-species[1 ... 2] = [(id: 043, name: "Oddish"), (id: 016, name: "Pidgey")]
+species[1 ... 2] = [(number: 043, name: "Oddish"), (number: 016, name: "Pidgey")]
 species
-// $R1: [(id: Int, name: String)] = 3 values {
+// $R1: [(number: Int, name: String)] = 3 values {
 //   [0] = {
 //     id = 25
 //     name = "Pikachu"
@@ -536,11 +536,11 @@ Instead, the programmer must use the `Array.insert(_:at:)` function.
 It inserts a new element at the position `at` and moves all remaining elements one index after:
 
 ```swift
-species[3] = (id: 025, name: "Pikachu")
+species[3] = (number: 025, name: "Pikachu")
 // fatal error: Index out of range
-species.insert((id: 043, name: "Oddish"), at: 0)
+species.insert((number: 043, name: "Oddish"), at: 0)
 species
-// $R1: [(id: Int, name: String)] = 4 values {
+// $R1: [(number: Int, name: String)] = 4 values {
 //   [0] = {
 //     id = 43
 //     name = "Oddish"
@@ -566,7 +566,7 @@ It removes the element at index `at` and moves all remaining elemennts one index
 ```swift
 species.remove(at: 1)
 species
-// $R1: [(id: Int, name: String)] = 3 values {
+// $R1: [(number: Int, name: String)] = 3 values {
 //   [0] = {
 //     id = 43
 //     name = "Oddish"
@@ -584,7 +584,7 @@ species
 
 ## Sets
 
-A set is a collection of values of homogeneous type.
+A [set](https://en.wikipedia.org/wiki/Set_(abstract_data_type)) is a collection of values of homogeneous type.
 Unlike arrays, sets are not ordered, and can contain at most one instance of each value.
 Swift does not provide a dedicated syntax for sets:
 they are written as arrays and explicitly typed as sets.
@@ -607,9 +607,9 @@ let speciesNames : Set<String> = []
 let speciesNames = Set<String>()
 ```
 
-> Notice that if we write `Set<Specie>`,
-> the compiler would complain about the `Specie` type not conforming to the `Hashable` protocol.
-> This is because the elements of a set must have some properties that our type `Specie` doesn't have.
+> Notice that if we write `Set<Species>`,
+> the compiler would complain about the `Species` type not conforming to the `Hashable` protocol.
+> This is because the elements of a set must have some properties that our type `Species` doesn't have.
 > We'll see later how we can extend a type to make it respect such properties.
 
 As arrays, sets are immutable if declared with `let`, and mutable if declared with `var`.
@@ -633,7 +633,7 @@ speciesNames.count
 
 ## Dictionaries
 
-A dictionary is a mapping from keys to values.
+A [dictionary](https://en.wikipedia.org/wiki/Associative_array) is a mapping from keys to values.
 Each key is associated with exactly one value or nothing.
 Like a set, a key cannot appear more than once in a dictionary.
 A same value can however be associated with multiple keys.
@@ -641,8 +641,8 @@ Dictionaries are written as a comma-separated list of key-value pairs `k: v`,
 where `k` is a key and `v` its associated value:
 
 ```swift
-enum Element { case grass, fire, water }
-let speciesElements = ["Bulbasaur": Element.grass, "Charmander": Element.fire]
+enum SpeciesType { case grass, fire, water }
+let speciesTypes = ["Bulbasaur": SpeciesType.grass, "Charmander": SpeciesType.fire]
 ```
 
 If the dictionary is declared before its initialization, or is initially empty,
@@ -650,8 +650,8 @@ the type of its keys and values must be defined explicitly.
 The syntax is similar to the one used for arrays and sets:
 
 ```swift
-let speciesElements : [String: SpeciesType] = []
-let speciesElements = [String: SpeciesType]()
+let speciesTypes : [String: SpeciesType] = []
+let speciesTypes = [String: SpeciesType]()
 ```
 
 Dictionaries are indexed by their keys.
@@ -660,10 +660,10 @@ The values of a dictionary can be accessed by subscripting the dictionary,
 using the square brackets `[]`, with the desired key.
 
 ```swift
-enum Element { case grass, fire, water }
-let speciesTypes = ["Bulbasaur": Element.grass, "Charmander": Element.fire]
+enum SpeciesType { case grass, fire, water }
+let speciesTypes = ["Bulbasaur": SpeciesType.grass, "Charmander": SpeciesType.fire]
 speciesTypes["Bulbasaur"]
-// $R0: Element? = grass
+// $R0: SpeciesType? = grass
 ```
 
 Notice that the result is an optional.
@@ -674,156 +674,154 @@ If the programmer knows that the key exists, the `!` operator can be used to get
 
 ```swift
 speciesTypes["Bulbasaur"]!
-// $R0: Element = grass
+// $R0: SpeciesType = grass
 ```
 
 As arrays and sets, dictionaries are mutable if declared with `var` and constants if declared with `let`.
 Modification of the value associated to a key is similar to arrays and sets:
 
 ```swift
-enum Element { case grass, fire, water }
-let speciesTypes = ["Bulbasaur": Element.grass, "Charmander": Element.fire]
+enum SpeciesType { case grass, fire, water }
+let speciesTypes = ["Bulbasaur": SpeciesType.grass, "Charmander": SpeciesType.fire]
 speciesTypes["Bulbasaur"] = .water
 ```
 
 Insertion and deletion differ from arrays and sets, as they are possible using subscripts:
 
 ```swift
-enum Element { case grass, fire, water }
-let speciesTypes = ["Bulbasaur": Element.grass, "Charmander": Element.fire]
+enum SpeciesType { case grass, fire, water }
+let speciesTypes = ["Bulbasaur": SpeciesType.grass, "Charmander": SpeciesType.fire]
 speciesTypes["Oddish"] = .grass
 speciesTypes["Charmander"] = nil
 ```
 
-## Structs
+## Structures
 
-Struct are a general-purpose data structures that groups variables together.
-In that sense, it is similar to a tuple, but we'll see later why it is much more powerful.
+Structs are [record types](https://en.wikipedia.org/wiki/Record_type).
+They allow to group together data.
+They are similar to tuples with labels, but have much more powerful features that will be seen later.
 
-A struct is declared with the keyword `struct`:
+A struct is declared with the keyword `struct`,
+and contains typed properties declared as variables or constants:
 
 ```swift
+typealias Species = (number: Int, name: String)
 struct Pokemon {
   let species: Species
   var level: Int
 }
 ```
 
-Notice that unlike with tuples, we specify whether the properties of a structs are variables (`var`) or constants (`let`).
-This distinction defines what will or won't be mutable once our struct is initialized:
+Notice that unlike tuples, this type definition specifies whether each property is a variable or a constant.
+This distinction defines what is mutable or immutable once the struct is initialized:
 
 ```swift
 var rainer = Pokemon(species: (number: 134, name: "Vaporeon"), level: 58)
-print(rainer)
-// Prints "Pokemon(species: (134, "Vaporeon"), level: 58)"
+let sparky = Pokemon(species: (number: 135, name: "Jolteon"), level: 31)
 ```
 
-> Swift provided us with a default initializer for the `Pokemon` struct,
-> as we didn't declared any.
-> It is called *memberwise initializer*.
-> We'll see later how we can declare custom initializers.
+> Swift provides a default initializer for the `Pokemon` struct,
+> as there is none explicitly defined.
+> This initializer is called *memberwise initializer*,
+> and requires to define values for all properties of the struct.
+> We will see later how to declare custom initializers.
 
 The `Pokemon` struct initializer is used to initialize the `rainer` variable,
 which in turn initializes the properties of the struct (namely `species` and `level`).
 Accessing the properties of a struct instance is performed using the *dot syntax*:
 
 ```swift
-print(rainer.level)
-// Prints "58"
+rainer.level
+// $R0: Int = 58
 ```
 
-The property `rainer.level` can be mutated, as it is declared as a variable **and** so is `rainer`.
-However, the compiler will complain when trying to assign a value to `rainer.species`,
-as it is declared a constant:
-
-```swift
-rainer.level = rainer.level + 1
-rainer.species = (number: 001, name: "Bulbasaur")
-// Error: Cannot assign to property: 'species' is a 'let' constant
-```
-
+The property `rainer.level` can be mutated, as the `rainer` is a `var` **and** the `level` property is also a `var`.
+On the contrary, it is impossible to assign `rainer.specie`, because the property is a `let`,
+or to assign `sparky.level`, because `sparky` is a constant.
 If a struct is initialized as a constant, then none of its properties can be mutated,
 no matter how they were declared:
 
 ```swift
-let sparky = Pokemon(species: (number: 135, name: "Jolteon"), level: 31)
+rainer.level = rainer.level + 1
+rainer.level
+// $R0: Int = 59
+rainer.specie = (number: 001, name: "Bulbasaur")
+// error: cannot assign to property: 'specie' is a 'let' constant
 sparky.level = sparky.level + 1
-// Error: Cannot assign to property: 'sparky'  is a 'let' constant
+// error: cannot assign to property: 'sparky' is a 'let' constant
 ```
 
 ## Classes
 
-Classes *look* very similar to structs, but are actually fundamentally different.
-They are declare with the same syntax.
-However, unlike structs, they don't automatically get a default initializer:
+[Classes](https://en.wikipedia.org/wiki/Class_(computer_programming)) *look* very similar to structs,
+but are actually fundamentally different.
+They are declared with the same syntax but, unlike structs, do not automatically get a default initializer:
 
 ```swift
+typealias Species = (number: Int, name: String)
 class Pokemon {
     let species: Species
     var level: Int
-
     init(species: Species, level: Int) {
-        self.species = species
+        self.specie = specie
         self.level = level
     }
 }
 ```
 
-> We'll discuss initializers with their syntax and semantics at length later in this tutorial.
+> We will discuss initializers, together with their syntax and semantics, at length later in this tutorial.
 > For the time being, just use them as presented in the examples.
 
-Now that `Pokemon` is class, one very big difference can be noticed:
+One difference is easily spotted between classes and structs.
+With the `Pokemon` class, it is possible to increase the `level` even on constant variables:
 
 ```swift
 let sparky = Pokemon(species: (number: 135, name: "Jolteon"), level: 31)
 sparky.level = sparky.level + 1
-print(sparky.level)
-// Prints "32"
+sparky.level
+// $R0: Int = 32
 ```
 
-The compiler now lets us assigning a value to the property `sparky.level`,
-even if `sparky` is a constant.
-This is because **classes are reference types** and **struct are value types**.
-In other words, the constant `sparky` is like a pointer to an instance of type `Pokemon`.
-While it is not possible to change the pointer value (i.e. the `sparky` constant):
+This is because **classes are reference types** whereas **structs are value types**.
+In other words, the constant `sparky` is a pointer to an instance of type `Pokemon`,
+whereas the same using a struct is the instance itself.
+While it is not possible to change the pointer value (i.e., the `sparky` constant),
+it is possible to change a pointee's property (e.g., `sparky.level`)
+as long as it is not itself constant.
 
 ```swift
 var rainer = Pokemon(species: (number: 134, name: "Vaporeon"), level: 58)
 sparky = rainer
-// Error: Cannot assign to value: 'sparky' is a 'let' constant
+// error: cannot assign to value: 'sparky' is a 'let' constant
 ```
 
-it is totally fine to change a pointee's property (e.g. `sparky.level`),
-as long as they are not constant themselves.
-
-Let's consider another counterintuitive situation:
+Reference types allow several variables to point to the same shared class instance.
+Thus, modifying a property through one variable changes the shared instance,
+and thus the data seen from the other variables:
 
 ```swift
 var sparky = Pokemon(species: (number: 135, name: "Jolteon"), level: 31)
-var sparky2 = sparky
-
-sparky2.level = sparky2.level + 1
-print(sparky.level)
-// Prints "32"
-print(sparky2.level)
-// Prints "32"
+var another = sparky
+sparky.level = sparky.level + 1
+sparky.level
+// $R0: Int = 32
+another.level
+// $R1: Int = 32
 ```
 
-Despite that `sparky2.level` was changed, `sparky.level` was also mutated!
-This happens because `sparky` and `sparky2` are actually references to the same instance of `Pokemon`.
-Back when `Pokemon` was a struct, this wouldn't have happened:
+When `sparky.level` is changed, `another.level` is also mutated!
+This happens because `sparky` and `another` are actually references to the same instance of `Pokemon`.
+When `Pokemon` was a struct, this would not happen:
 
 ```swift
 struct Pokemon { /* ... */ }
-
 var rainer = Pokemon(species: (number: 134, name: "Vaporeon"), level: 58)
-var rainer2 = rainer
-
-rainer2.level = rainer2.level + 1
-print(rainer.level)
-// Prints "58"
-print(rainer2.level)
-// Prints "59"
+var another = rainer
+rainer.level = rainer.level + 1
+rainer.level
+// $R0: Int = 59
+another.level
+// $R1: Int = 58
 ```
 
 As classes are reference types,
@@ -831,15 +829,14 @@ it is possible to check whether two variables (or constants) refers to the same 
 
 ```swift
 class Pokemon { /* ... */ }
-
 var sparky = Pokemon(species: (number: 135, name: "Jolteon"), level: 31)
-var sparky2 = sparky
-
-print(sparky === sparky2)
-// Prints "true"
+var another = sparky
+print(sparky === another)
+// $R0: Bool = true
 ```
 
 As briefly illustrated above, reference types can lead to counterintuitive,
 and very difficult to debug situations.
 Hence, they should be avoided in Swift whenever possible.
-We recommend the reader to watch the WWDC 2015 talk "[Building Better Apps with Value Types in Swift](https://developer.apple.com/videos/play/wwdc2015/414/)" for further discussion on the subject.
+We recommend the reader to watch the WWDC 2015 talk "[Building Better Apps with Value Types in Swift](https://developer.apple.com/videos/play/wwdc2015/414/)"
+for further discussion on the subject.
