@@ -728,7 +728,7 @@ let sparky = Pokemon(species: (number: 135, name: "Jolteon"), level: 31)
 
 The `Pokemon` struct initializer is used to initialize the `rainer` variable,
 which in turn initializes the properties of the struct (namely `species` and `level`).
-Accessing the properties of a struct instance is performed using the *dot syntax*:
+Accessing the properties of a type instance (e.g. a struct instance) is performed using the *dot syntax*:
 
 ```swift
 rainer.level
@@ -749,6 +749,35 @@ rainer.specie = (number: 001, name: "Bulbasaur")
 // error: cannot assign to property: 'specie' is a 'let' constant
 sparky.level = sparky.level + 1
 // error: cannot assign to property: 'sparky' is a 'let' constant
+```
+
+Note that if the instance is wrapped into an optional types,
+its properties can be accessed via *optional chaining*:
+
+```swift
+var rainer: Pokemon? = Pokemon(species: (number: 134, name: "Vaporeon"), level: 58)
+rainer?.level
+// $R0: Int? = 58
+```
+
+Notice that the return value of an optional chaining is an optional type,
+wrapping the requested property.
+The reason is that if the first optional is `nil`,
+the result of the expression will also be `nil`,
+but typed as an optional of the expected value:
+
+```swift
+rainer = nil
+rainer?.level
+// $R0: Int? = nil
+```
+
+Optional chaining also allows to safely assign the property of an instance wrapped in an optional.
+If the value is present, its property will be set, otherwise nothing will happen.
+
+```swift
+rainer?.level = 87
+// $R0: ()? = nil
 ```
 
 ## Classes
@@ -838,5 +867,5 @@ print(sparky === another)
 As briefly illustrated above, reference types can lead to counterintuitive,
 and very difficult to debug situations.
 Hence, they should be avoided in Swift whenever possible.
-We recommend the reader to watch the WWDC 2015 talk "[Building Better Apps with Value Types in Swift](https://developer.apple.com/videos/play/wwdc2015/414/)"
+We recommend the reader to watch the WWDC 2015 talk "[Building Better Apps with Value Types in Swift](https://www.youtube.com/watch?v=av4i3x-aZbM)"
 for further discussion on the subject.
