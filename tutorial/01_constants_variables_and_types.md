@@ -5,7 +5,6 @@
 The Swift programming language distinguishes
 [variables](https://en.wikipedia.org/wiki/Variable_(computer_science)) and
 [constants](https://en.wikipedia.org/wiki/Constant_(computer_programming)).
-
 Both are an association between a name and a value.
 Variables can have their value modified, whereas constants cannot.
 
@@ -214,10 +213,9 @@ print (trainer1)
 
 ## Tuples
 
-A tuple is a container composed of two or more values.
+A [tuple](https://en.wikipedia.org/wiki/Tuple) is a container composed of two or more values.
 It can be initialized with a comma-separated list of values, enclosed in parentheses.
-Tuples can be defined for any permutation of other types, and for as many types as needed.
-Note however that the number of values inside a tuple can never change:
+A tuple type is a Cartesian product of as many types as needed.
 
 ```swift
 let bulbasaur = (001, "Bulbasaur")
@@ -227,47 +225,69 @@ let bulbasaur = (001, "Bulbasaur")
 > To seize numbers in binary, octal or hexadecimal,
 > prefix your number with respectively `0b`, `0o` and `0x`.
 
-Here again, Swift's type inference makes sure the `bulbasaur` constant is properly typed with the tuple type `(Int, String)`.
+Type inference makes sure that the `bulbasaur` constant is typed consistently with the tuple type `(Int, String)`.
 Nevertheless, tuples can be explicitly typed using a comma-separated list of types, enclosed in parentheses.
-This can prove useful when the variable (or constant) is not necessarily initialized when declared:
+This can prove useful when the variable is not initialized on declaration:
 
 ```swift
 let bulbasaur: (Int, String)
 bulbasaur = (001, "Bulbasaur")
 ```
 
+Assignment of a tuple value to a tuple variable must be valid with respect of typing,
+as all other assignments.
+
+```swift
+var pokemon = (001, "Bulbasaur")
+pokemon = (002, "Ivysaur")
+pokemon = ("Venusaur", 003)
+// error: cannot assign value of type 'String' to type 'Int'
+```
+
 The values of a tuple are accessed by suffixing a tuple expression with `.n`,
 where `n` is the `n`-th value of the tuple (starting at 0):
 
 ```swift
-print(bulbasaur.1)
-// Prints "Bulbasaur"
+bulbasaur.1
+// $R1: String = "Bulbasaur"
 ```
 
-To make the code clearer, the values of a tuple can be labeled.
-As a result, they can be accessed using their labels rather than their position in the tuple:
+Tuples are an easy way to pack data together,
+but relying on the position within the tuple is a bad programming practice.
+To make the code clearer and less error-prone, the parts of a tuple can be labeled.
+As a result, they can be accessed using their labels rather than their position in the tuple.
+However, positional access is still possible, as Swift stores both the position and the label for tuples:
 
 ```swift
-let bulbasaur = (number: 001, name: "Bulbasaur")
-print(bulbasaur.name)
-// Prints "Bulbasaur"
+let bulbasaur = (id: 001, name: "Bulbasaur")
+// bulbasaur: (id: Int, name: String) = {
+//   id = 1
+//   name = "Bulbasaur"
+// }
+bulbasaur.1
+// $R1: String = "Bulbasaur"
+bulbasaur.name
+// $R2: String = "Bulbasaur"
 ```
+
+> 👎 You should almost never use positional tuples. Use labeled ones instead.
 
 Another way to retrieve the values of a tuple is to assign them to new variables (or constants).
 This process is called *decomposition*:
 
 ```swift
-let (pokemonNumber, pokemonName) = pokemon
-print(pokemonName)
-// Prints "Bulbasaur"
+let bulbasaur = (id: 001, name: "Bulbasaur")
+let (pokemonId, pokemonName) = bulbasaur
+// pokemonId: Int = 1
+// pokemonName: String = "Bulbasaur"
 ```
 
 If some values aren't needed, they can be explicitly ignored by using `_` when decomposing the tuple:
 
 ```swift
+let bulbasaur = (id: 001, name: "Bulbasaur")
 let (_, pokemonName) = pokemon
-print(pokemonName)
-// Prints "Bulbasaur"
+// pokemonName: String = "Bulbasaur"
 ```
 
 > ❔
@@ -275,21 +295,21 @@ print(pokemonName)
 > How could we define a type for `bulbasaur` such that the name is optional?
 
 Tuple types (as well as other types) can become quite wordy.
-Thanks to type inference, that's transparent in most situations.
-But as we've seen, explicit typing is sometimes still required.
-So as to avoid writing long type names in our code over and over,
-It is possible to create type aliases:
+Thanks to type inference, defining the tuple type is implicit in most situations.
+But as we have seen, explicit typing is sometimes still required.
+In order to avoid writing several times the same type (at different places in the code),
+it is possible to create type aliases:
 
 ```swift
-typealias Species = (number: Int, name: String)
-
-let bulbasaur: Species = (001, "Bulbasaur")
+typealias Specie = (id: Int, name: String)
+let bulbasaur: Specie = (001, "Bulbasaur")
+let ivysaur  : Specie = (id: 002, name: "Ivysaur")
+let venusaur : Specie = (name: "Venusaur", id: 003)
 ```
 
-> Notice that we omit the labels when initializing the `bulbasaur` constant.
-> This is fine because we already told Swift what the labels are,
-> and since the order in which the variables of a tuples are stored never changes.
-> So we still can refer to `bulbasaur.name` or `bulbasaur.1` interchangeably.
+> Notice that we can omit the labels when initializing the `bulbasaur` constant.
+> This is possible only if the values are in the same order as in the tuple definition.
+> We can also change the order of the labels when initializing the `venusaur` constant.
 
 ## Enumerations
 
