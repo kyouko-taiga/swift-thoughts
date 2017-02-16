@@ -214,6 +214,7 @@ print (trainer1)
 ## Tuples
 
 A [tuple](https://en.wikipedia.org/wiki/Tuple) is a container composed of two or more values.
+It is a kind of [record data structure](https://en.wikipedia.org/wiki/Record_(computer_science)).
 It can be initialized with a comma-separated list of values, enclosed in parentheses.
 A tuple type is a Cartesian product of as many types as needed.
 
@@ -304,32 +305,39 @@ it is possible to create type aliases:
 typealias Specie = (id: Int, name: String)
 let bulbasaur: Specie = (001, "Bulbasaur")
 let ivysaur  : Specie = (id: 002, name: "Ivysaur")
-let venusaur : Specie = (name: "Venusaur", id: 003)
 ```
+<!-- let venusaur : Specie = (name: "Venusaur", id: 003) -->
 
 > Notice that we can omit the labels when initializing the `bulbasaur` constant.
 > This is possible only if the values are in the same order as in the tuple definition.
-> We can also change the order of the labels when initializing the `venusaur` constant.
+<!-- > We can also change the order of the labels when initializing the `venusaur` constant. -->
 
 ## Enumerations
 
-An enumeration defines a a set of possible values for a type, allowing for safer and more intuitive code.
-It can represent very abstract concepts, like a set of possible shapes,
-or more concrete data, like the possible configurations of a library.
-It is declared with the keyword `enum`, and its different values with the keyword `case`:
+An enumeration defines a set of possible values for a type.
+It can also be named [union type](https://en.wikipedia.org/wiki/Union_type) in other programming languages.
+An enumeration is used to represent types that can have a *fixed* set of possible contents.
+Enumerations are not possible if the set of possible contents can be extended,
+for instance by the programmer.
+They must be fully defined in only one place of the soure code.
+
+<!-- can represent very abstract concepts, like a set of possible shapes,
+or more concrete data, like the possible configurations of a library. -->
+An enumeration type is declared using the keyword `enum`,
+and its different values with the keyword `case`:
 
 ```swift
-enum SpeciesType {
+enum Element {
   case grass
   case fire
   case water
 }
 ```
 
-It is sometimes preferable to declare the cases of an enumeration on a single line:
+It is also possible to declare the cases of an enumeration on a single line:
 
 ```swift
-enum SpeciesType {
+enum Element {
   case grass, fire, water
 }
 ```
@@ -337,54 +345,61 @@ enum SpeciesType {
 > An enumeration is a type.
 > By convention, all type names start with a capital letter (`Int`, `String`, ...) and so should enumerations.
 > The name of an enumeration should also be singular rather than plural,
-> so that its use makes more sense your the code.
+> so that its use makes more sense in the code.
 
-The cases of an enumeration can be assigned to a variable (or constant),
-like any other value:
+A variable of an enumeration type can only be of *one* of the enumeration cases.
+Assignment is written using the qualified name of the case:
 
 ```swift
-let bulbasaurType = SpeciesType.grass
-print(bulbasaurType)
-// Prints "grass"
+let bulbasaurElement = Element.grass
+// bulbasaurElement: Element = grass
 ```
 
-If the type of the variable (or constant) has already been inferred, or explicitly defined,
-it is possible (and preferred) to omit the name of the enumeration.
+If the type of the variable (or constant) is explicitly defined or has already been inferred,
+it is possible (and preferred) to omit the name of the enumeration:
 
 ```swift
-let bulbasaurType: SpeciesType
-
-bulbasaurType = .grass
-// Prints "grass"
+let bulbasaurElement: Element
+bulbasaurElement = .grass
+// bulbasaurElement: Element = grass
 ```
 
-Enumerations can store *associated values* with one or multiple of its cases.
-This permits to associate more information with a particular case:
+Enumeration cases can store *associated values*.
+This permits to add information to particular cases:
 
 ```swift
-enum Item {
+enum Consumable {
   case pokeball(catchRateMultiplier: Double)
   case potion(restoration: Int)
 }
-
 let ultraBall = Consumable.pokeball(catchRateMultiplier: 2)
 ```
 
-Associated values can also refer to another (or the same) case of the enumeration.
-Such enumeration are said *recursive*, and prefixed with the keyword `indirect`:
+Beware that the above `ultraBall` constant is of type `Consumable`.
+It is thus not possible to directly consider it as a `pokeball` and access its `catchRateMultiplier`.
+This tutorial explains later how to obtain such information.
 
 ```swift
-indirect enum SpeciesType {
-  case grass, fire, water
-  case dual(primary: SpeciesType, secondary: SpeciesType)
-}
-
-let lotadType = SpeciesType.dual(primary: .water, secondary: .grass)
+ultraBall.catchRateMultiplier
+// error: value of type 'Consumable' has no member 'catchRateMultiplier'
 ```
 
-Enumerations are a powerful tool in Swift, and there would be much more to talk about.
-However, as this tutorial doesn't try to be exhaustive,
-we invite the reader to check [Apple's language guide](https://developer.apple.com/library/content/documentation/Swift/Conceptual/Swift_Programming_Language/Enumerations.html) for more information and/or examples.
+Enumeration types can be *recursive*.
+This is very useful for naturally recursive data structures,
+such as [lists](https://en.wikipedia.org/wiki/List_(abstract_data_type)) or [trees](https://en.wikipedia.org/wiki/Tree_(data_structure)).
+A recursive enumeration must be prefixed with the keyword `indirect`:
+
+```swift
+indirect enum Tree {
+  case leaf
+  case node([Tree])
+}
+let aTree : Tree = .node([.leaf, .node([]), .leaf])
+```
+
+Enumerations are a powerful tool in Swift, and there is much more to talk about.
+More detailed information and examples are available in
+[Apple's language guide](https://developer.apple.com/library/content/documentation/Swift/Conceptual/Swift_Programming_Language/Enumerations.html).
 
 ## Arrays
 
