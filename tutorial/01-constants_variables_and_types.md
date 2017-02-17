@@ -36,6 +36,11 @@ pokemonSpecies = "Pikachu"
 // error: cannot assign to value: 'pokemonSpecies' is a 'let' constant
 ```
 
+> Programmers should always use the most restrictive construct by default,
+> for instance a `let` instead of a `var`.
+> In the case of `let` and `var`, this is called [const correctness](https://isocpp.org/wiki/faq/const-correctness)
+> in other languages, and helps to avoid some bugs.
+
 The value of variable and constants can be printed with the built-in function `print(_:)`:
 
 ```swift
