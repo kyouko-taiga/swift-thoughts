@@ -752,7 +752,7 @@ rainer.level
 ```
 
 The property `rainer.level` can be mutated, as the `rainer` is a `var` **and** the `level` property is also a `var`.
-On the contrary, it is impossible to assign `rainer.specie`, because the property is a `let`,
+On the contrary, it is impossible to assign `rainer.species`, because the property is a `let`,
 or to assign `sparky.level`, because `sparky` is a constant.
 If a struct is initialized as a constant, then none of its properties can be mutated,
 no matter how they were declared:
@@ -761,8 +761,8 @@ no matter how they were declared:
 rainer.level = rainer.level + 1
 rainer.level
 // $R0: Int = 59
-rainer.specie = (number: 001, name: "Bulbasaur")
-// error: cannot assign to property: 'specie' is a 'let' constant
+rainer.species = (number: 001, name: "Bulbasaur")
+// error: cannot assign to property: 'species' is a 'let' constant
 sparky.level = sparky.level + 1
 // error: cannot assign to property: 'sparky' is a 'let' constant
 ```
@@ -808,7 +808,7 @@ class Pokemon {
     let species: Species
     var level: Int
     init(species: Species, level: Int) {
-        self.specie = specie
+        self.species = species
         self.level = level
     }
 }
