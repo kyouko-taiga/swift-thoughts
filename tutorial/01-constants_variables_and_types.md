@@ -1,4 +1,15 @@
-# Constants, Variables and Types
+---
+layout: page
+title: Constants, Variables and Types
+permalink: /tutorial/chapter-1/
+---
+
+<span class="prev">
+  <a href="{{ site.baseurl }}tutorial" title="Tutorial Index">
+    <span class="arrow">←</span> Index
+  </a>
+</span>
+<hr />
 
 ## Constants and Variables
 
@@ -869,3 +880,16 @@ and very difficult to debug situations.
 Hence, they should be avoided in Swift whenever possible.
 We recommend the reader to watch the WWDC 2015 talk "[Building Better Apps with Value Types in Swift](https://www.youtube.com/watch?v=av4i3x-aZbM)"
 for further discussion on the subject.
+
+<nav id="post-nav">
+  <span class="prev">
+    <a href="{{ site.baseurl }}tutorial" title="Introduction">
+      <span class="arrow">←</span> Introduction
+    </a>
+  </span>
+  <span class="next">
+      <a href="{{ site.baseurl }}tutorial/chapter-2" title="Chapter 2">
+          Control Flow <span class="arrow">→</span>
+      </a>
+  </span>
+</nav>

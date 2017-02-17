@@ -1,4 +1,15 @@
-# Inheritance
+---
+layout: page
+title: Inheritance
+permalink: /tutorial/chapter-6/
+---
+
+<span class="prev">
+  <a href="{{ site.baseurl }}tutorial" title="Tutorial Index">
+    <span class="arrow">←</span> Index
+  </a>
+</span>
+<hr />
 
 Swift supports [class inheritance](https://en.wikipedia.org/wiki/Inheritance_(object-oriented_programming)),
 a mechanism that allows a class to share parts of its implementation with subclasses,
@@ -376,3 +387,16 @@ class EliteFourMember: Trainer {
 
 > Notice the addition of a default value for the stored properties of `GymLeader` and `EliteFourMember`,
 > allowing us to directly call `super.init(name:pokemons:)` in the their respective override of the required initializer.
+
+<nav id="post-nav">
+  <span class="prev">
+    <a href="{{ site.baseurl }}tutorial/chapter-5" title="Chapter 5">
+      <span class="arrow">←</span> Initializers
+    </a>
+  </span>
+  <span class="next">
+      <a href="{{ site.baseurl }}tutorial/chapter-7" title="Chapter 7">
+          Protocols, Extensions and Generics <span class="arrow">→</span>
+      </a>
+  </span>
+</nav>

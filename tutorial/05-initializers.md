@@ -1,4 +1,15 @@
-# Initializers
+---
+layout: page
+title: Initializers
+permalink: /tutorial/chapter-5/
+---
+
+<span class="prev">
+  <a href="{{ site.baseurl }}tutorial" title="Tutorial Index">
+    <span class="arrow">←</span> Index
+  </a>
+</span>
+<hr />
 
 Swifts statically enforces that any variable (or constant) must be initialized before it is used.
 Until now, we've been mostly using default initializers (except for classes that don't get one),
@@ -323,3 +334,16 @@ indirect enum SpeciesType {
 Note that a non-failable initializer cannot delegate (neither in value types nor in classes) to a failable initializer.
 A failable initializer on the other hand may do so,
 and potential initialization failure will be propagated along the delegation chain.
+
+<nav id="post-nav">
+  <span class="prev">
+    <a href="{{ site.baseurl }}tutorial/chapter-4" title="Chapter 4">
+      <span class="arrow">←</span> Properties and Methods
+    </a>
+  </span>
+  <span class="next">
+      <a href="{{ site.baseurl }}tutorial/chapter-6" title="Chapter 6">
+          Inheritance <span class="arrow">→</span>
+      </a>
+  </span>
+</nav>

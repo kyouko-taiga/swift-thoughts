@@ -1,4 +1,9 @@
-# A Case Against Class Inheritance
+---
+layout: post
+title:  A Case Against Class Inheritance
+description: Or why you should avoid object-oriented programming.
+categories: object-oriented programming, protocol-oriented programming
+---
 
 As we've seen in the examples of Chapter 7, combining protocols, extensions and generic types is very powerful.
 In fact, one could argue that it is much more powerful than the classic object-oriented programming subclassing mechanism

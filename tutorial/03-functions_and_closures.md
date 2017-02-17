@@ -1,4 +1,15 @@
-# Functions and Closures
+---
+layout: page
+title: Functions and Closures
+permalink: /tutorial/chapter-3/
+---
+
+<span class="prev">
+  <a href="{{ site.baseurl }}tutorial" title="Tutorial Index">
+    <span class="arrow">←</span> Index
+  </a>
+</span>
+<hr />
 
 Functions (and closures) are blocks of organized and (hopefully) reusable code that is used to perform a single or group of related actions.
 As a program grows in complexity, they often become (and should be) inevitable.
@@ -707,3 +718,16 @@ We invite the reader to consult sections related to [functions](https://develope
 
 Olivier Halligon (who apparently also likes Pokemon),
 also posted a very nice [blog post](http://alisoftware.github.io/swift/closures/2016/07/25/closure-capture-1/) about the closures capture semantics.
+
+<nav id="post-nav">
+  <span class="prev">
+    <a href="{{ site.baseurl }}tutorial/chapter-2" title="Chapter 2">
+      <span class="arrow">←</span> Control Flow
+    </a>
+  </span>
+  <span class="next">
+      <a href="{{ site.baseurl }}tutorial/chapter-4" title="Chapter 4">
+          Properties and Methods <span class="arrow">→</span>
+      </a>
+  </span>
+</nav>

@@ -1,4 +1,15 @@
-# Protocols, Extensions and Generics
+---
+layout: page
+title: Protocols, Extensions and Generics
+permalink: /tutorial/chapter-7/
+---
+
+<span class="prev">
+  <a href="{{ site.baseurl }}tutorial" title="Tutorial Index">
+    <span class="arrow">←</span> Index
+  </a>
+</span>
+<hr />
 
 Protocols represent a set of requirements that a type accepts to conform to.
 Although some major differences can be observed,
@@ -571,3 +582,11 @@ func == <S1: Stack, S2: Stack>(lhs: S1, rhs: S2) -> Bool
 print(ArrayBackedStack([1, 2]) == ArrayBackedStack([1, 2]))
 // Prints "true"
 ```
+
+<nav id="post-nav">
+  <span class="prev">
+    <a href="{{ site.baseurl }}tutorial/chapter-6" title="Chapter 6">
+      <span class="arrow">←</span> Inheritance
+    </a>
+  </span>
+</nav>

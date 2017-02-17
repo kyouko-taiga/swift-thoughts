@@ -1,4 +1,8 @@
-# Introduction to Swift programming
+---
+layout: page
+title: Introduction to Swift programming
+permalink: /tutorial/
+---
 
 Swift is an open source general purpose programming language developed by Apple.
 While the primary goal of Swift was to replace Objective-C for the deelopment of macOS and iOS applications,
@@ -13,3 +17,11 @@ a Pokemon simulator.
 
 All the code snippets can be copy/pasted into the Swift [REPL](https://en.wikipedia.org/wiki/Read–eval–print_loop).
 Just run the `swift` command in a terminal to get it.
+
+* <a href="{{ site.baseurl }}tutorial/chapter-1">Chapter 1: Constants, Variables and Types</a>
+* <a href="{{ site.baseurl }}tutorial/chapter-2">Chapter 2: Control Flow</a>
+* <a href="{{ site.baseurl }}tutorial/chapter-3">Chapter 3: Functions and Closures</a>
+* <a href="{{ site.baseurl }}tutorial/chapter-4">Chapter 4: Properties and Methods</a>
+* <a href="{{ site.baseurl }}tutorial/chapter-5">Chapter 5: Initializers</a>
+* <a href="{{ site.baseurl }}tutorial/chapter-6">Chapter 6: Inheritance</a>
+* <a href="{{ site.baseurl }}tutorial/chapter-7">Chapter 7: Protocols, Extensions and Generics</a>

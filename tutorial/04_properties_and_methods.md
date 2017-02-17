@@ -1,4 +1,15 @@
-# Properties and Methods
+---
+layout: page
+title: Properties and Methods
+permalink: /tutorial/chapter-4/
+---
+
+<span class="prev">
+  <a href="{{ site.baseurl }}tutorial" title="Tutorial Index">
+    <span class="arrow">←</span> Index
+  </a>
+</span>
+<hr />
 
 We've seen in chapter 1 that we can associate properties with structs and classes.
 However, this wasn't the full story, as Swift properties can be more than mere constants or variables.
@@ -580,3 +591,16 @@ let matrix = Matrix(grid: [0, 1, 2, 3])
 print(matrix[1, 1])
 // Prints "3"
 ```
+
+<nav id="post-nav">
+  <span class="prev">
+    <a href="{{ site.baseurl }}tutorial/chapter-3" title="Chapter 3">
+      <span class="arrow">←</span> Functions and Closures
+    </a>
+  </span>
+  <span class="next">
+      <a href="{{ site.baseurl }}tutorial/chapter-5" title="Chapter 5">
+          Initializers <span class="arrow">→</span>
+      </a>
+  </span>
+</nav>

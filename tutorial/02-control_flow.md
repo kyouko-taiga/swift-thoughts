@@ -1,4 +1,15 @@
-# Control Flow
+---
+layout: page
+title: Control Flow
+permalink: /tutorial/chapter-2/
+---
+
+<span class="prev">
+  <a href="{{ site.baseurl }}tutorial" title="Tutorial Index">
+    <span class="arrow">←</span> Index
+  </a>
+</span>
+<hr />
 
 Swift uses `if`, `switch` or `guard` to make conditional statements,
 and `for-in`, `while` or `repeat-while` to make loops.
@@ -398,3 +409,16 @@ default:
 A `guard` statement can always be replaced with an `if` statement.
 The choice between the two depends solely on the programmer and is mostly a matter of preference.
 In some situations, one might produce a code clearer than the other.
+
+<nav id="post-nav">
+  <span class="prev">
+    <a href="{{ site.baseurl }}tutorial/chapter-1" title="Chapter 1">
+      <span class="arrow">←</span> Constants, Variables and Types
+    </a>
+  </span>
+  <span class="next">
+      <a href="{{ site.baseurl }}tutorial/chapter-3" title="Chapter 3">
+          Functions and Closures <span class="arrow">→</span>
+      </a>
+  </span>
+</nav>
