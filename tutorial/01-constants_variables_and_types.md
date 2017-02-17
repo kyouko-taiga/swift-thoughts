@@ -426,7 +426,7 @@ More detailed information and examples are available in
 
 ## Arrays
 
-An array is a [sequence](https://en.wikipedia.org/wiki/Sequence) of values of homogeneous type (e.g. a collection of `String` values).
+An array is a [sequence](https://en.wikipedia.org/wiki/List_(abstract_data_type)) of values of homogeneous type (e.g. a collection of `String` values).
 Arrays are declared with square brackets `[]`:
 
 ```swift
@@ -708,7 +708,7 @@ speciesTypes["Charmander"] = nil
 
 ## Structures
 
-Structs are [record types](https://en.wikipedia.org/wiki/Record_type).
+Structs are [record types](https://en.wikipedia.org/wiki/Record_(computer_science)).
 They allow to group together data.
 They are similar to tuples with labels, but have much more powerful features that will be seen later.
 
