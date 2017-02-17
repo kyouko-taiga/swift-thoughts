@@ -11,17 +11,19 @@ permalink: /tutorial/chapter-3/
 </span>
 <hr />
 
-Functions (and closures) are blocks of organized and (hopefully) reusable code that is used to perform a single or group of related actions.
-As a program grows in complexity, they often become (and should be) inevitable.
+[Functions](https://en.wikipedia.org/wiki/Subroutine) are blocks of organized and reusable code that performs a single action, or group of related actions.
+As a program grows in complexity, they become mandatory.
 
-Actually, we've already used some functions so far, like `print(:_)`, `type(of:)` or `Array.insert(_:at:)`.
+This tutorial has already used some functions so far, like `print(:_)`, `type(of:)` or `Array.insert(_:at:)`.
 
 > Disclaimer for the Haskell lovers: Swift is **not** a functional language.
 > However, it supports this style of programming very well, as its functions are first-class citizen.
 
 ## Function Signatures
 
-Functions are declared with the keyword `func`:
+Functions are declared with the keyword `func`.
+They are declared by a function name, parameter names and types, and a result type.
+Each function contains a body that performs the effective computation:
 
 ```swift
 func minInt(lhs: Int, rhs: Int) -> Int {
@@ -35,165 +37,166 @@ meaning that it takes two `Int` parameters and returns one `Int` value.
 
 When referring to the signature of Swift functions in comments and documentation,
 the convention is to use its name, followed by the list of parameters separated by `:`.
-For instance, we would refer to the signature of the above function with `minInt(lhs:rhs:)`.
+For instance, the signature of the above function is written `minInt(lhs:rhs:)` in Swift documentation.
 This convention is borrowed from Objective-C and can be observed through all official documentation.
 
 > Note that this example just serves to illustrate the definition of functions.
 > Swift already has a built-in `min(_:_:)` function which should always be preferred.
 
-A function can be called by using its name, followed by the arguments to pass into its parameters:
+A function can be called by using its name, followed by the arguments to pass into its parameters.
+Swift is a language with [named parameters](https://en.wikipedia.org/wiki/Named_parameter).
+It means that the parameter names **must** be given when calling the function:
 
 ```swift
-print(minInt(lhs: 1, rhs: 2))
-// Prints "1"
+minInt(lhs: 1, rhs: 2)
+// 1
 ```
 
-Notice that we had to label its arguments.
-By default, functions use their parameter names as labels for their arguments.
-It can prove very useful to distinguish between overloaded functions (see below),
-or when the parameters are not completely obvious.
+Parameter names can prove very useful to distinguish overloaded functions,
+for code readability, or when the parameters are not completely obvious.
 For instance, the character collection of a `String` has a method `split(whereSeparator:)` whose result is quite obvious,
 thanks to its labeled parameter.
 
-It is possible to specify custom labels for the function parameters.
-Notice that however, the parameters keep their respective name *inside* the function body:
+It is possible to distinguish between the labels used for calling,
+and their name within the function body.
+The calling name is put in the first place, and the body name in second:
 
 ```swift
 func minInt(between lhs: Int, and rhs: Int) -> Int {
   return lhs < rhs ? lhs : rhs
 }
-
-print(minInt(between: 1, and: 2))
-// Prints "1"
+minInt(between: 1, and: 2)
+// 1
 ```
 
-Finally, when the name of the function is clear enough, it is possible to specify that the labels aren't required:
+When the name of the function is clear enough,
+it is possible to specify that the labels are not required in the function call using the `_` special name:
 
 ```swift
 func minInt(_ lhs: Int, _ rhs: Int) -> Int {
   return lhs < rhs ? lhs : rhs
 }
-
-print(minInt(1, 2))
-// Prints "1"
+minInt(1, 2)
+// 1
 ```
 
-Functions can return multiple values by returning a tuple.
-For instance, this function takes 3 parameters and returns the minimum and maximum values:
+Functions can return only one value, but this value can be a tuple.
+For instance, the `minMaxInt` function takes 3 parameters and returns the minimum and maximum values:
 
 ```swift
 func minMaxInt(_ first: Int, _ second: Int, _ third: Int) -> (minimum: Int, maximum: Int) {
-    return (minInt(minInt(first, second), third), maxInt(maxInt(first, second), third))
+    return (minimum: min(min(first, second), third), maximum: max(max(first, second), third))
 }
-
-print(minMaxInt(1, 2, 3))
-// Prints "(1, 3)"
+minMaxInt(1, 2, 3)
+// $R0: (minimum: Int, maximum: Int) = {
+//   minimum = 1
+//   maximum = 3
+// }
 ```
 
-A functions may also not return anything.
-Maybe because it just prints some value on the console, or it has some other side effect like setting a value in an external database.
-In those case, the return type of the function is `()` (read as "void"), but is not required to be specified explicitly:
+A functions can also return nothing.
+Such functions often have side effects, either on their parameters or on the execution environment,
+for instance by printing something or setting a value in an external database.
+In this case, the return type of the function is `()` (read as "void").
+It is not required to be specified explicitly:
 
 ```swift
 func greet(_ name: String) {
   print("Welcome \(name)!")
 }
-
 greet("Brock")
-// Prints  "Welcome Brock!"
-print(type(of: greet))
-// Prints "(String) -> ()"
+// Welcome Brock!
 ```
 
-If a function returns a value, Swift expects that this value is used,
-otherwise the compiler will emit a warning.
+If a function returns a value, Swift expects this value to be used somewhere,
+otherwise the compiler emits a warning.
 There are two ways to silent this warning:
 
-* explicitly mark the result unused by prefixing the function call with `_ =`; or
+* If the result is expected to be used in most cases,
+  it is the caller responsibility to discard it.
+  The call must explicitly mark the result as unused by assigning it to the special `_ =` variable:
 
 ```swift
 _ = minInt(1, 2)
 ```
 
-* decorate the function with `@discardableResult`.
+* If the result is only sometimes used,
+  it is the function responsibility to discard it.
+  The function must be decorated with `@discardableResult`:
 
 ```swift
 @discardableResult
 func minInt(_ lhs: Int, _ rhs: Int) -> Int {
   return lhs < rhs ? lhs : rhs
 }
-
 minInt(1, 2)
 ```
 
 ## Default Arguments and Overloading
 
-It it possible to define default arguments on function parameters:
+Function can have default values for some of their parameters:
 
 ```swift
 func greet(_ name: String, with message: String = "Welcome") {
   print("\(message) \(name)!")
 }
-
 greet("Brock", with: "Hello")
-// Prints "Hello Brock!"
+// Hello Brock!
 greet("Brock")
-// Prints "Welcome Brock!"
+// Welcome Brock!
 ```
 
-Because of the default argument on its `message` parameter,
+Because of the default value on its `message` parameter,
 there are two ways to call the `greet(_:with:)` function,
 as illustrated in the example.
-In fact, one could say that there are two versions of the function:
+It is equivalent to writing two versions of this function:
 
-* there's the `greet(_:with:)` function, whose signature is `(String, String) -> ()`; and
-* there's the `greet(_:)` function, whose signature is `(String) -> ()`.
+* `greet(_:with:)` with signature `(String, String) -> ()`;
+* `greet(_:)` with signature `(String) -> ()`.
 
-Another way to describe the same two functions is to *overload* `greet(_:with:)` with a different signature:
+It is possible in Swift to create these two functions using [overloading](https://en.wikipedia.org/wiki/Function_overloading).
+The same function name (`greet`) can be given to several functions, as long as their signatures differ.
+When calling the function name, the compiler chooses the function that matches the given parameters:
 
 ```swift
 func greet(_ name: String, with message: String = "Welcome") {
   print("\(message) \(name)!")
 }
-
 func greet(_ name: String) {
   print("Welcome \(name)!")
 }
-
 greet("Brock", with: "Hello")
-// Prints "Hello Brock!"
+// Hello Brock!
 greet("Brock")
-// Prints "Welcome Brock!"
+// Welcome Brock!
 ```
 
-Function overloading is actually much more powerful than default arguments,
-because the signatures can be totally unrelated:
+Function overloading is a bad practice to define default arguments,
+but is a powerful feature because the signatures can be totally unrelated.
+For instance, the following code allows to greet one person, or a group:
 
 ```swift
 func greet(_ name: String) {
   print("Welcome \(name)!")
 }
-
 func greet(_ names: [String]) {
-  greet(names.joined(separator: ", "))
+  greet(names.joined(separator: " and "))
 }
-
 greet("Brock")
-// Prints "Welcome Brock!"
+// Welcome Brock!
 greet(["Brock", "Misty"])
-// Prints "Welcome Brock, Misty!"
+// "Welcome Brock and Misty!
 ```
 
-Function overloading and default arguments can be combined to create even more combinations.
-For instance, there are four versions of the `greet` function in the following example:
+Function overloading and default arguments can be combined together to create even more usable functions.
+For instance, there are four possible calls of the `greet` function in the following example:
 
 ```swift
 func greet(_ name: String, with message: String = "Welcome") {
   print("Welcome \(name)!")
 }
-
 func greet(_ names: [String], with message: String = "Welcome") {
-  greet(names.joined(separator: ", "), with: message)
+  greet(names.joined(separator: " and "), with: message)
 }
 ```
 
@@ -204,40 +207,39 @@ That means a function can't modify the value of its argument:
 
 ```swift
 struct Pokemon { /* ... */ }
-
-func swapPokemon(_ aPokemon: Pokemon, _ anotherPokemon: Pokemon) {
-  let temporary = aPokemon
-  aPokemon = anotherPokemon
-  // Error: Cannot assign to value: 'aPokemon' is a 'let' constant
-  anotherPokemon = temporary
-  // Error: Cannot assign to value: 'anotherPokemon' is a 'let' constant
+func swapPokemon(_ x: Pokemon, _ y: Pokemon) {
+  let temporary = x
+  x = y
+  // Error: Cannot assign to value: 'x' is a 'let' constant
+  y = temporary
+  // Error: Cannot assign to value: 'y' is a 'let' constant
 }
 ```
 
-If this seems unnatual, welcome to the pure functional programming side.
+<!-- If this seems unnatual, welcome to the pure functional programming side.
 We have cookies!
 However, it is a very practice in languages whose function can't return multiple values.
+But swift isn't one of them, and we could write `swapPokemon` as the following: -->
 
-But swift isn't one of them, and we could write `swapPokemon` as the following:
+When writing code in functional style, the solution is to return the swapped elements,
+instead of modifying the parameters:
 
 ```swift
-func swapPokemon(_ aPokemon: Pokemon, _ anotherPokemon: Pokemon) -> (Pokemon, Pokemon) {
-  return (anotherPokemon, aPokemon)
+func swapPokemon(_ x: Pokemon, _ y: Pokemon) -> (Pokemon, Pokemon) {
+  return (y, x)
 }
 ```
 
-However, this is a bit deceiving, as this function doesn't solve the problem it was written for.
-Indeed, one would still have to assign its result to the variables it was supposed to swap.
-
+However, sometimes it is needed to update the function parameters.
+This behavior should be carefully thought, and only chosen if no other solution is viable.
 Hence, although often recommended against,
-it is sometimes necessary to define mutable parameters in Swift,
-marking them as *inout*:
+Swift allows programmers to define mutable parameters by marking them as *inout*:
 
 ```swift
-func swapPokemon(_ aPokemon: inout Pokemon, _ anotherPokemon: inout Pokemon) {
-  let temporary = aPokemon
-  aPokemon = anotherPokemon
-  anotherPokemon = temporary
+func swapPokemon(_ x: inout Pokemon, _ y: inout Pokemon) {
+  let temporary = x
+  x = y
+  y = temporary
 }
 ```
 
@@ -245,86 +247,92 @@ func swapPokemon(_ aPokemon: inout Pokemon, _ anotherPokemon: inout Pokemon) {
 >
 > What is the signature of `swapPokemon(_:_:)`?
 
-To provide arguments for an inout parameter, one should prefix the variable with `&`:
+The caller of a function must be aware that the parameters will be modified.
+Instead of only adding such information in the documentation, or in the function signature,
+Swift requires to explicitly prefix arguments given to `inout` parameters with `&`:
 
 ```swift
-var firstPokemon = Pokemon(species: (number: 134, name: "Vaporeon"), level: 58)
-var secondPokemon = Pokemon(species: (number: 135, name: "Jolteon"), level: 31)
-
-swapPokemon(&firstPokemon, &secondPokemon)
-print(firstPokemon)
-// Prints "Pokemon(species: (135, "Jolteon"), level: 31)"
-print(secondPokemon)
-// Prints "Pokemon(species: (134, "Vaporeon"), level: 58)"
+var x = Pokemon(species: (number: 134, name: "Vaporeon"), level: 58)
+var y = Pokemon(species: (number: 135, name: "Jolteon"), level: 31)
+swapPokemon(&x, &y)
+(x, y)
+// (Pokemon(species: (135, "Jolteon"), level: 31), Pokemon(species: (134, "Vaporeon"), level: 58))
 ```
 
-> Note that this example just serves to illustrate the definition of inout parameters.
-> Swift already has a built-in `swap(_:_:)` function which should always be preferred.
+> Note that this example just serves to illustrate the definition of `inout` parameters.
+> Swift already has a built-in `swapPokemon(_:_:)` function which should always be preferred.
 
-Note that because the parameters are marked inout, the arguments *must* be variables.
+Note that because the parameters are marked `inout`, the arguments *must* be variables.
 It is not possible to call `swapPokemon(_:_:)` with a constant expression.
 
 ### Generic Functions
 
-In the above example, `swapPokemon(_:_:)` can only swap `Pokemon`,
-and it is impossible to call it with anything else, as its name suggests.
+In the above example, `swapPokemon(_:_:)` can only swap arguments of the `Pokemon` type.
+It is impossible to call this function with anything else, even if the operations to perform are always the same.
 
 ```swift
 indirect enum SpeciesType { /* ... */ }
-
-var firstSpeciesType = SpeciesType.grass
-var secondSpeciesType = SpeciesType.dual(primary: .water, secondary: .grass)
-
-swapPokemon(&firstSpeciesType, &secondSpeciesType)
+var x = SpeciesType.grass
+var y = SpeciesType.dual(primary: .water, secondary: .grass)
+swapPokemon(&x, &y)
 // Error: Cannot convert value of type 'SpeciesType' to expected argument type 'Pokemon'
 ```
 
-Of course we could write another function `swapSpeciesType(_:_:)` that does the same thing for `SpeciesType` values,
-but what about `Species`, or simply `Int` and `String`?
-Clearly there should be a better way to do this (Swift ain't C yo), and this is where generics come in play.
-Generics allow one to write a function where one or several of its parameter/return types are unknown:
+Of course we could write another function `swapSpeciesType(_:_:)` that does the same thing for `SpeciesType` values.
+But we also would have to write the same for  `Species`, or simply `Int` and `String`.
+<!-- Clearly there should be a better way to do this (Swift ain't C yo), and this is where generics come in play. -->
+[Generics](https://en.wikipedia.org/wiki/Generic_programming) allow programmers to write a function where one or several of its parameter or return types are unknown:
 
 ```swift
-func swapGeneric<T>(_ value: inout T, _ anotherValue: inout T) {
-  let temporary = value
-  value = anotherValue
-  anotherValue = temporary
+func swapGeneric<T>(_ x: inout T, _ y: inout T) {
+  let temporary = x
+  x = y
+  y = temporary
 }
 
-swapGeneric(&firstSpeciesType, &secondSpeciesType)
+indirect enum SpeciesType { /* ... */ }
+var a = SpeciesType.grass
+var b = SpeciesType.dual(primary: .water, secondary: .grass)
+swapGeneric(&a, &b)
 ```
 
 In the above example, `T` acts as a placeholder for the type that will be used to specialize the function.
-When calling `swapGeneric(&firstSpeciesType, &secondSpeciesType)`,
-the compiler infers that `T` should be replaced with `SpeciesType` for this particular instruction,
+When calling `swapGeneric(&a, &b)`,
+the compiler infers that `T` should be replaced with `SpeciesType` in this function call,
 and it generates a version of `swapGeneric(_:_:)` typed `(inout SpeciesType, inout SpeciesType) -> ()`.
 
 ## Functions as First-Class Citizen
 
-Functions are first-class citizen, meaning that they can be assigned to variables (or constants),
+Functions are first-class citizen in Swift, meaning that they can be assigned to variables (or constants),
 like any other value:
 
 ```swift
 let f = minMaxInt
-print(f(1, 2, 3))
-// Prints "(1, 3)"
+f(1, 2, 3)
+// (1, 3)
 ```
 
 > ❔
 >
 > What type did Swift infer for the constant `f`?
 
-As they are first-class citizen, functions can also be used as arguments for other functions.
+It is also possible to as for the type of a function using the `type(of:)` function:
+
+```swift
+type(of: greet)
+// (String) -> ()
+```
+
+As they are first-class citizen, functions can be passed as arguments to other functions.
 For instance, the following function takes as argument any function whose signature is `(Int, Int) -> Int`,
-and applies it with constant values:
+and applies it to some constant values:
 
 ```swift
 func applyBinaryOp(_ f: (Int, Int) -> Int) -> Int {
   return f(6, 8)
 }
-
-print(applyBinaryOp(minInt))
-// Prints "6"
+applyBinaryOp(minInt)
+// 6
 ```
 
 > Notice that in the body of `applyBinaryOp(_:)`, `f` is called without any labels.
@@ -338,38 +346,38 @@ print(applyBinaryOp(minInt))
 > Interestingly, this is also the reason why even if all parameters of a function are named,
 > Swift doesn't allow it to be called in wrong order, whereas Python would for instance.
 
-Note that Swift's `+` operator is also a function that takes 2 `Int` and returns 14.
-As such, it is possible to use it as an argument of `applyBinaryOp(_:)`.
+Note that Swift's `+` operator is also a function that takes 2 `Int` and returns one `Int`.
+It is thus possible to use it as an argument of `applyBinaryOp(_:)`.
 
 ```swift
-print(applyBinaryOp(+))
-// Prints 14
+applyBinaryOp(+)
+// 14
 ```
 
 > Unfortunately, as `+` is also a unary operator (`(Int) -> Int`),
 > the compiler won't understand what `type(of:+)` means,
 > so we can't check the signature of `+` this way.
 > However, the operator will be unambiguously recognized as an argument of `applyBinaryOp(_:)`,
-> as its parameter is typed more precisely than that of `type(of:)`, which is a bit more tricky.
+> as its parameter is typed more precisely than that of `type(of:)`.
 
-Some built-in functions of Swift use this ability as well.
+Some built-in functions of Swift make use of first class functions.
 For instance, arrays have a function `Array.reduce(_:_:)`,
-which takes an initial value as first argument and a function `(Int, Int) -> Int` as second one.
-It then recursively applies the function on each element,
+that takes an initial value as first argument and a function `(Int, Int) -> Int` as second one.
+`reduce` recursively applies the function on each element,
 using the result of the last application as second parameter.
 For instance, the following program computes the sum of an array of `Int`:
 
 ```swift
-let sum = [1, 4, 0, 2].reduce(0, +)
-print(sum)
-// Prints "7"
+let sum = [1, 2, 3, 4].reduce(0, +)
+// 4+(3+(2+(1+0)))
+// 10
 ```
 
 ## Scope of Functions
 
 The scope of a function refers to the variables a function can *see* (and sometimes mutate).
 Obviously, this include the arguments of the function as well as the variables defined inside the function,
-but also all variables defined within the function's context (i.e. the scope it is defined in):
+but also all variables defined within the function's context, i.e., the scope it is defined in:
 
 ```swift
 let globalNumber = 2
@@ -381,9 +389,8 @@ func outer() {
   }
   inner()
 }
-
 outer()
-// Prints "9"
+// 9
 ```
 
 The `outer()` function can see `globalNumber` and `outerNumber`,
@@ -402,45 +409,43 @@ func incGlobalNumber(by n: Int) {
 }
 
 incGlobalNumber(by: 2)
-print(globalNumber)
-// Prints "2"
+globalNumber
+// 2
 ```
 
-When the name of a variable in an outer scope collides with that of another scope,
-a function always refers to the closest scope the variable is defined in.
-This behavior is called *lexically scoped name binding*:
+When the name of a variable in an outer scope collides with that of an inner scope,
+a function always refers to the closest variable.
+This behavior is called [*lexically scoped name binding*](https://en.wikipedia.org/wiki/Scope_(computer_science)#Lexical_scoping):
 
 ```swift
 let name = "Bulby"
 func printCheeringMessage(to name: String) {
   print("Go \(name)!")
 }
-
 printCheeringMessage(to: "Sparky")
-// Prints "Go Sparky!"
+// Go Sparky!
 ```
 
 ## Closures
 
 A closure can be seen as an anonymous blocks of code that can be passed around in the program.
-Like functions, they can capture the constants and variables of the context in which they are defined.
-They are defined with the curvy brackets `{}`:
+Like functions, they capture the constants and variables of the context in which they are defined.
+Closures are defined with the curvy brackets `{}`:
 
 ```swift
 let block = { someArgument in
   return "(" + someArgument + ")"
 }
-
-print(block("Bulby"))
-// Prints "(Bulby)"
+block("Bulby")
+// (Bulby)
 ```
 
-Thanks to Swift's type inference, the above closure doesn't have to be explicitly typed.
-The compiler could infer that `someArgument` should be typed with `String`,
+Thanks to Swift's type inference, the above closure does not have to be explicitly typed.
+The compiler infers that `someArgument` is of type `String`,
 because of the expression `"(" + someArgument ")"`.
-Similarly, it could infer the return type of the closure.
+Similarly, it infers the return type of the closure because of the `return` statement.
 Depending on what is written in the closure,
-the type inference engine might not be as lucky:
+type inference might not be as lucky:
 
 ```swift
 let block = { someArgument in
@@ -450,8 +455,8 @@ let block = { someArgument in
 ```
 
 In the above example,
-the type inference fails because there's no way to infer the type of `someArgument`.
-In that case, the closure should be typed explicitly:
+the type inference fails because there is no way to infer the type of `someArgument`.
+In that case, the closure must be typed explicitly:
 
 ```swift
 let block: (String) -> String = { someArgument in
@@ -465,13 +470,13 @@ Closures are not required to have parameters nor return any value:
 let producer: () -> String = {
   return "Bulby"
 }
-
 let consumer: (String) -> () = { someArgument in
   print(someArgument)
 }
 ```
 
-When the closure is composed of a single line, Swift allows to omit the return statement:
+When the closure is composed of a single line, Swift allows to omit the return statement.
+Programmers should use the `return` statement instead of this syntax sugar for consistency with the other parts of the language.
 
 ```swift
 let identity: (String) -> String = { someArgument in
@@ -480,20 +485,25 @@ let identity: (String) -> String = { someArgument in
 ```
 
 It is not required to name the parameters of a closure.
-In that case, the arguments can be accessed with `$n`, where `n` is the `n`-th argument.
+In that case, the arguments can be accessed with `$n`, where `n` is the `n`-th argument,
+starting with `$0`:
 
 ```swift
-let identity: (String) -> String = { $0 }
+let identity: (String) -> String = {
+  return $0
+}
 ```
 
 If a closure doesn't use all its arguments, Swift requires that they are explicitly discarded:
 
 ```swift
-let block: (String) -> String = { _ in "Bulby" }
+let block: (String) -> String = { _ in
+  return "Bulby"
+}
 ```
 
-Note however that closure are rarely (if not never) used that way.
-Indeed, it is usually clearer to use a function definition.
+Note however that closures are rarely assigned to variables,
+as it is usually clearer to use a function definition.
 Instead, closures are used when calling a function that takes another function as argument.
 In that case, the signature of the function always types the closure unambiguously.
 
@@ -501,13 +511,13 @@ Recalling the `Array.reduce` function,
 here is another (yet more complicated) way to compute the sum of an array.
 
 ```swift
-let sum = [1, 4, 0, 2].reduce(0, { $0 + $1 })
+let sum = [1, 2, 3, 4].reduce(0, { $0 + $1 })
 ```
 
 A closure is said *trailing* when it is the last parameter of a function.
 It that case, swift allows to write it outside the parameters list.
-This often makes code much clearer, in particular when the code of the closure is long.
-The following example illustrates this feature with the `Array.filter(_:)` function (whose name is self-explanatory).
+This often makes code clearer, in particular when the code of the closure is long.
+The following example illustrates this feature with the `Array.filter(_:)` function (whose name is self-explanatory):
 
 ```swift
 let primes = [3, 4, 5, 6, 7, 8, 9].filter {
@@ -522,6 +532,10 @@ let primes = [3, 4, 5, 6, 7, 8, 9].filter {
 print(primes)
 // Prints "[3, 5, 7]"
 ```
+
+> This [syntactic sugar](https://en.wikipedia.org/wiki/Syntactic_sugar) has an influence on the design of function signatures.
+> It the programmer has to define a function that takes several parameters, one of which a function,
+> the function parameter should be put at the last position of the parameters list.
 
 It might not seem obvious, but closures are reference types:
 
@@ -539,8 +553,8 @@ In the above example, even if `incrementer` is a constant,
 it is still able to mutate the `globalNumber` it captured.
 This behavior reminds that of the classes, as we illustrated in Chapter 1.
 
-As for classes, this also means that assigning two variables to different variables (or constants)
-will make them refer to the exact same closure.
+As for classes, this also means that assigning a closure to different variables (or constants)
+will make the variables refer to the exact same closure.
 
 ## Functions and Closures as return type
 
