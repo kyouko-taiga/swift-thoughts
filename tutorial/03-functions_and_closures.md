@@ -16,8 +16,10 @@ As a program grows in complexity, they become mandatory.
 
 This tutorial has already used some functions so far, like `print(:_)`, `type(of:)` or `Array.insert(_:at:)`.
 
-> Disclaimer for the Haskell lovers: Swift is **not** a functional language.
-> However, it supports this style of programming very well, as its functions are first-class citizen.
+<div class="alert alert-warning">
+  Disclaimer for the Haskell lovers: Swift is <b>not</b> a functional language.
+  However, it supports this style of programming very well, as its functions are first-class citizen.
+</div>
 
 ## Function Signatures
 

@@ -16,9 +16,11 @@ a mechanism that allows a class to share parts of its implementation with subcla
 so as to factor the common parts of those subclasses.
 It is at the core of object-oriented programming.
 
-> Disclaimer for the Java lovers: Swift is **not** an object-oriented language.
-> Although it supports that feature, it is often recommended against using it.
-> We'll see later how protocols address (arguably much better) the same problem as object-orientation.
+<div class="alert alert-warning">
+  Disclaimer for the Java lovers: Swift is <b>not</b> an object-oriented language.
+  Although it supports that feature, it is often recommended against using it.
+  We'll see later how protocols address (arguably much better) the same problem as object-orientation.
+</div>
 
 ## Subclassing
 

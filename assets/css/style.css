@@ -239,9 +239,9 @@ em, i { font-style: italic; }
 }
 
 .post h2 {
-	margin-bottom: 40px;
-	  font: 300 24px/1.5 "Helvetica Neue",Helvetica,Arial,sans-serif;
-	  color: #111;
+	margin-bottom: 20px;
+  font: 300 24px/1.5 "Helvetica Neue",Helvetica,Arial,sans-serif;
+  color: #111;
 }
 
 
@@ -285,6 +285,7 @@ p.small {
 }
 
 blockquote {
+	margin-bottom: 20px;
 	padding-left: 15px;
 	border-left: 3px solid #eee;
 }
