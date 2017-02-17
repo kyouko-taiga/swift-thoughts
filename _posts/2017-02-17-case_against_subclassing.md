@@ -1,26 +1,42 @@
 ---
 layout: post
 title:  A Case Against Class Inheritance
-description: Or why you should avoid object-oriented programming.
+description: Please, stop using classes everywhere.
 categories: object-oriented programming, protocol-oriented programming
 ---
 
-As we've seen in the examples of Chapter 7, combining protocols, extensions and generic types is very powerful.
-In fact, one could argue that it is much more powerful than the classic object-oriented programming subclassing mechanism
-that we discussed in Chapter 6.
-Besides, using protocols conformance rather than subclassing in Swift often allows to use value types (i.e. structures)
-rather than reference types (i.e. classes).
-As we've discussed in Chapter 1,
-reference types' behavior sometimes proves counterintuitive,
-and leads to situations difficult to debug.
+In the first chapter of my [Swift tutorial]({{ site.baseurl }}tutorial/chapter-1),
+I write quickly mention some common counterintuitive problems one faces with reference types (a.k.a. classes).
+Swift is **not** an object-oriented programming language.
+It *can* use classes (and sometimes they do have their places),
+and supports them quite well actually.
+But really, Swift is protocol-oriented.
+Just look at its standard library if you're not convinced:
+`Array`, isn't a class, it's a good old struct that implements clever protocols.
+Yet, I see classes are everywhere!
+Almost all examples of the Apple's language guide are given with classes,
+and I can count with my fingers how many times I've seen a `struct` in a blog post.
 
-In this Chapter, we'll show how protocols and extensions can replace subclassing
-by reimplementing the class hierarchy we defined in Chapter 6.
-In addition, we'll explain why this new design is superior.
+The reason is probably that object-oriented programming has been hammered in the skull
+of every student in computer science for years (and will continue to for years to come).
+And at first, everything looks so perfect.
+Classes represent the perfect level abstraction to handle complexity,
+and subclassing is the best way to factor common behaviors, right?
+But as soon as we start scratching the surface,
+we realize that like the cake, object-oriented was a lie!
+
+Others have talked about it much more eloquently that I could ever do,
+but still I wanted to weigh on this as well.
+In [Chapter 6]({{ site.baseurl }}tutorial/chapter-6) of my tutorial,
+I talk about class inheritance, which I illustrate with a small class hierarchy.
+I make a tour of almost all features of class inheritance,
+overriding methods and properties, inheriting convenience initializers, etc.
+In this post, I'll show how protocols and extensions can do the exact same thing,
+and yet not suffer from the design flaws an object-oriented approach is most likely to introduce.
 
 ## The Object-Oriented Version
 
-Here is the final class inheritance skeleton we defined:
+Here is a skeleton of the the final class inheritance I defined in [Chapter 6]({{ site.baseurl }}tutorial/chapter-6):
 
 ```swift
 struct Pokemon { /* ... */ }
@@ -56,14 +72,13 @@ class EliteFourMember: Trainer {
 ```
 
 In addition to this stub,
-let's recall that we overrode the `init(name:)` designated initializer of `PokemonLover` in `Trainer`.
-We also overrode the `makeFriends` method,
-and `name` property of `PokemonLover` in `EliteFourMember`.
-Finally, we created one instance of `PokemonLover` (Professor Oak),
+it should be noted that I overrode the `init(name:)` designated initializer of `PokemonLover` in `Trainer`.
+I also overrode the `makeFriends` method, and `name` property of `PokemonLover` in `EliteFourMember`.
+Finally, I created one instance of `PokemonLover` (Professor Oak),
 one instance of `Trainer` (Ash),
 one instance of `GymLeader` (Brock) and
 one instance of `EliteFourMember` (Malva).
-The complete code of this object-oriented version is available in the annexes of this tutorial.
+The complete code of this object-oriented version is available [here]({{ site.baseurl }}annexes/2017-02-17/object_oriented.swift).
 
 ## The Protocol-Oriented Version
 
@@ -242,15 +257,14 @@ extension Trainer: InitializableWithBestFriend {
 ```
 
 And we're finished.
-The complete code of this protocol-oriented version is available in the annexes of this tutorial.
+The complete code of this protocol-oriented version is available [here]({{ site.baseurl }}annexes/2017-02-17/protocol_oriented.swift).
 
-## Comparing Two Approaches
+## Comparing the Two Approaches
 
-Is there a better approach?
 If we compare the file sizes, the protocol-oriented version is 118 lines,
 while the object-oriented version is 90.
 The difference isn't so big but still favors the object-oriented version.
-So why is this chapter called "A Case Against Class Inheritance"?
+So why is this post is called "A Case Against Class Inheritance"?
 
 First of all, now that we only have value types,
 we can safely forget about object copies or unintended captured references.
