@@ -498,6 +498,10 @@ Post List
 	opacity: 0.8;
 }
 
+.alert {
+	margin: 15px auto;
+}
+
 /* Post Navigation */
 #post-nav {
 	border-top:1px solid #eee;
