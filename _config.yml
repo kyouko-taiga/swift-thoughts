@@ -11,7 +11,7 @@ highlight: rouge
 
 gems: [jekyll-paginate]
 paginate: 20
-baseurl: /
+baseurl: "/swift-thoughts/"
 # domain_name: 'http://yourblog-domain.com'
 # google_analytics: 'UA-XXXXXXXX-X'
 # disqus: false
