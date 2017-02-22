@@ -190,7 +190,7 @@ Assignment to another variable requires that the other variable is also an optio
 
 ```swift
 var trainer1: String? = "Ash"
-// trainer1: String? = nil
+// trainer1: String? = "Ash"
 var trainer2: String = trainer1
 // error: value of optional type 'String?' not unwrapped; did you mean to use '!' or '?'?
 var trainer3 = trainer1
@@ -698,7 +698,7 @@ Modification of the value associated to a key is similar to arrays and sets:
 
 ```swift
 enum SpeciesType { case grass, fire, water }
-let speciesTypes = ["Bulbasaur": SpeciesType.grass, "Charmander": SpeciesType.fire]
+var speciesTypes = ["Bulbasaur": SpeciesType.grass, "Charmander": SpeciesType.fire]
 speciesTypes["Bulbasaur"] = .water
 ```
 
@@ -706,7 +706,7 @@ Insertion and deletion differ from arrays and sets, as they are possible using s
 
 ```swift
 enum SpeciesType { case grass, fire, water }
-let speciesTypes = ["Bulbasaur": SpeciesType.grass, "Charmander": SpeciesType.fire]
+var speciesTypes = ["Bulbasaur": SpeciesType.grass, "Charmander": SpeciesType.fire]
 speciesTypes["Oddish"] = .grass
 speciesTypes["Charmander"] = nil
 ```
