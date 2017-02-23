@@ -261,9 +261,6 @@ swapPokemon(&x, &y)
 // (Pokemon(species: (135, "Jolteon"), level: 31), Pokemon(species: (134, "Vaporeon"), level: 58))
 ```
 
-> Note that this example just serves to illustrate the definition of `inout` parameters.
-> Swift already has a built-in `swapPokemon(_:_:)` function which should always be preferred.
-
 Note that because the parameters are marked `inout`, the arguments *must* be variables.
 It is not possible to call `swapPokemon(_:_:)` with a constant expression.
 
@@ -302,6 +299,9 @@ In the above example, `T` acts as a placeholder for the type that will be used t
 When calling `swapGeneric(&a, &b)`,
 the compiler infers that `T` should be replaced with `SpeciesType` in this function call,
 and it generates a version of `swapGeneric(_:_:)` typed `(inout SpeciesType, inout SpeciesType) -> ()`.
+
+> Note that this example just serves to illustrate the definition of `inout` parameters.
+> Swift already has a built-in `swap(_:_:)` generic function which should always be preferred.
 
 ## Functions as First-Class Citizen
 
