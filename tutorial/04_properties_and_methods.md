@@ -46,7 +46,7 @@ struct Pokemon {
     }
 
     set {
-      self.stepsWalkedWithTrainer = Int(newValue * 0.00076)
+      self.stepsWalkedWithTrainer = Int(newValue * 1/0.00076)
     }
   }
 }
@@ -101,7 +101,7 @@ indirect enum SpeciesType {
 
   var isDual: Bool {
     // Unfortunately, Swift doesn't have a syntax to return the result of this condition.
-    if case .dual(primary: _, secondary: _) == self {
+    if case .dual(primary: _, secondary: _) = self {
       return true
     }
     return false
@@ -282,7 +282,7 @@ bulby.level += 1
 
 ## Type Properties
 
-All the properties we've seen above have beed defined for the instances of a type,
+All the properties we've seen above have been defined for the instances of a type,
 meaning that each instance of the type gets its own property values.
 Swift also allows to define properties on the type itself.
 There will be only one copy of that properties, no matter how many instances get created.
@@ -379,7 +379,7 @@ print(ash.isFriends(with: brock))
 ```
 
 > It is not mandatory to prepend a type's own property with `self` inside a method.
-> Hence, we could have written only `firends.contains(...)` in the body of `isFriend(with:)`,
+> Hence, we could have written only `friends.contains(...)` in the body of `isFriend(with:)`,
 > since `friends` is a property of `Trainer`.
 > However, we strongly discourage this practice, because it can lead to ambiguity.
 
