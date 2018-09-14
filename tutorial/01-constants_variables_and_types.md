@@ -793,7 +793,7 @@ If the value is present, its property will be set, otherwise nothing will happen
 
 ```swift
 rainer?.level = 87
-// $R0: ()? = nil
+// $R0: ()? = 87
 ```
 
 ## Classes
