@@ -233,8 +233,6 @@ func swapPokemon(_ x: Pokemon, _ y: Pokemon) -> (Pokemon, Pokemon) {
 ```
 
 However, sometimes it is needed to update the function parameters.
-This behavior should be carefully thought, and only chosen if no other solution is viable.
-Hence, although often recommended against,
 Swift allows programmers to define mutable parameters by marking them as *inout*:
 
 ```swift
